@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="16dp"
+        android:layout_margin="@dimen/buttons_margin"
+        android:layout_weight="4">
+        <org.toptaxi.taximeter.tools.FontFitTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/tvCurOrderClientPrice"
+            android:textSize="2000dp"
+            android:text="sad" />
+    </android.support.v7.widget.CardView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+        <include layout="@layout/inc_cur_order_info"/>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="4">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Принять"
+            android:id="@+id/btnCurOrderMainAction"
+            android:singleLine="true"
+            style="@style/ButtonRoundGreen"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="1" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Отказ"
+            android:id="@+id/btnCurOrderAction"
+            android:singleLine="true"
+            style="@style/ButtonRoundRed"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mainIP">92.50.171.110</string>
+    <string name="reserveIP">62.133.173.81</string>
+    <string name="loginPort">7579</string>
+</resources>
