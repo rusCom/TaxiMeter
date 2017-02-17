@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         edActivityLoginPhone.setText(sharedPreferences.getString("accountPhone", ""));
 
         Button okButton = (Button)findViewById(R.id.btnActivityLoginGetToken);
-        okButton.setTextSize(okButton.getTextSize() * 2);
+        okButton.setTextSize((float) (okButton.getTextSize() * 1.5));
 
         llActivityLoginProgress.setVisibility(View.GONE);
 
