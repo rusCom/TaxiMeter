@@ -101,11 +101,14 @@ public class MainApplication extends Application implements LocationListener {
     }
 
     public static String getRubSymbol(){
+        String result = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return String.valueOf(Html.fromHtml("&#x20bd", Html.FROM_HTML_MODE_LEGACY)); // for 24 api and more
+            result = String.valueOf(Html.fromHtml("&#x20bd", Html.FROM_HTML_MODE_LEGACY)); // for 24 api and more
         } else {
-            return "руб.";
+            result = String.valueOf(Html.fromHtml("&#x20bd"));
         }
+        if (result.trim().equals(""))result = "руб.";
+        return result;
     }
 
     public void startMainService(){
