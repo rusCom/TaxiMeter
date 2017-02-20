@@ -133,9 +133,9 @@ public class Preferences {
         switch (curTheme){
             case 0:return "Дневная";
             case 1:return "Ночная";
-            case 2:return "Авто смена темы";
+            case 2:return "Подсветка";
         }
-        return "Авто смена темы";
+        return "Подсветка";
     }
 
 

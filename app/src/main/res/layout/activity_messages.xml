@@ -27,6 +27,8 @@
             android:id="@+id/etMessagesMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:imeOptions="actionSend"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_toLeftOf="@+id/btnMessagesSend"
             android:layout_toStartOf="@+id/btnMessagesSend" />

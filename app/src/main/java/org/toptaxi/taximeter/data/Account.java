@@ -10,6 +10,8 @@ import org.json.JSONObject;
 import org.toptaxi.taximeter.MainApplication;
 import org.toptaxi.taximeter.tools.Constants;
 
+import java.text.DecimalFormat;
+
 public class Account {
     protected static String TAG = "#########" + Account.class.getName();
     private String Token;
@@ -67,6 +69,13 @@ public class Account {
                 }
             });
         }
+    }
+
+    public String getMainActivityCaption(){
+        String result = new DecimalFormat("###,###.00").format(Double.valueOf(Balance));
+        result += " " + MainApplication.getRubSymbol();
+        result += " " + getStatusName();
+        return result;
     }
 
     public void setNullStatus(){

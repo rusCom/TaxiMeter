@@ -3,11 +3,12 @@ package org.toptaxi.taximeter.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
     private static String TAG = "#########" + MessagesActivity.class.getName();
     ListViewMessageAdapter adapter;
     ListView listView;
+    EditText edMessage;
     private View footer;
     LoadMoreAsyncTask loadMoreAsyncTask = new LoadMoreAsyncTask();
     boolean isFirst = true;
@@ -48,6 +50,21 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
 
         loadMoreAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+        edMessage = (EditText)findViewById(R.id.etMessagesMessage);
+        edMessage.setSingleLine(true);
+
+        edMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_NULL
+                        && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    Log.d(TAG, "onSendButtonClick");
+                    btnSendMessageClick(null);
+                }
+
+                return false;
+            }
+        });
 
     }
 
@@ -129,15 +146,14 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
 
     public void btnSendMessageClick(View view){
         String Text = ((EditText)findViewById(R.id.etMessagesMessage)).getText().toString();
-        if (!Text.equals("")){
-            SendMessageTask sendMessageTask = new SendMessageTask(this);
-            sendMessageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Text);
+        if (!Text.trim().equals("")){
+            new SendMessageTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Text);
         }
     }
 
     private class SendMessageTask extends AsyncTask<String, Void, Integer>{
         ProgressDialog progressDialog;
-        public SendMessageTask(Context mContext){
+        SendMessageTask(Context mContext){
             progressDialog = new ProgressDialog(mContext);
             progressDialog.setMessage("Передача данных ...");
         }
@@ -176,8 +192,7 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
                 listView.setSelection(listView.getCount());
             }
             findViewById(R.id.btnMessagesSend).setEnabled(true);
-            ((EditText)findViewById(R.id.etMessagesMessage)).setText("");
-            ((EditText)findViewById(R.id.etMessagesMessage)).clearFocus();
+            edMessage.getText().clear();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow((findViewById(R.id.etMessagesMessage)).getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);

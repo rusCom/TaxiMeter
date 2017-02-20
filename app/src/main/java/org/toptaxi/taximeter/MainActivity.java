@@ -529,6 +529,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 generateCurOrder();
                 break;
         }
+        this.setTitle(MainApplication.getInstance().getMainAccount().getMainActivityCaption());
     }
 
     @Override
@@ -684,14 +685,15 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
 
         drawer.addItem(new DividerDrawerItem());
-        themeItem = new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().getThemeName()).withSelectable(false).withIcon(FontAwesome.Icon.faw_exchange).withIdentifier(Constants.MENU_THEME);
-        drawer.addItem(themeItem);
+
         if (MainApplication.getInstance().getMainPreferences().dispatchingCallView){
-            drawer.addItem(new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().dispatchingCallCaption).withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_DISPATCHING));
+            drawer.addItem(new PrimaryDrawerItem().withName("Позвонить диспетчеру").withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_DISPATCHING));
         }
         if (MainApplication.getInstance().getMainPreferences().administrationCallView){
             drawer.addItem(new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().administrationCallCaption).withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_ADMINISTRATION));
         }
+        themeItem = new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().getThemeName()).withSelectable(false).withIcon(FontAwesome.Icon.faw_exchange).withIdentifier(Constants.MENU_THEME);
+        drawer.addItem(themeItem);
         drawer.addItem(new DividerDrawerItem());
         drawer.addItem(new PrimaryDrawerItem().withName("ver. " + MainApplication.getInstance().getVersionName()).withIcon(FontAwesome.Icon.faw_creative_commons).withEnabled(false).withSelectable(false));
 
