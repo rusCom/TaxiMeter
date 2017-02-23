@@ -166,7 +166,23 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        if (connectionResult.getErrorCode() == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setMessage("Необходимо обновить Сервисы Google Play");
+            alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse("market://details?id=com.google.android.gms"));
+                    startActivity(intent);
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+            });
+            alertDialog.create();
+            alertDialog.show();
+        }
+        else {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setMessage(connectionResult.getErrorCode() + " " + connectionResult.getErrorMessage());
             alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -175,6 +191,10 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             });
             alertDialog.create();
             alertDialog.show();
+
+        }
+
+
 
     }
 

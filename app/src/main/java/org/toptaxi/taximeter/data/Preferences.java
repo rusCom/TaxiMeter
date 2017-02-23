@@ -28,6 +28,7 @@ public class Preferences {
     private Integer curTheme, screenOrientation, curVersion;
     private Boolean checkCurVersion = false;
     private ArrayList<String> templateMessages;
+    private Boolean ActivateUnlim = false, ParkingButtons = false;
 
     public Preferences(){
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
@@ -47,6 +48,8 @@ public class Preferences {
     public void setFromJSON(JSONObject data) throws JSONException {
         if (data.has("share_driver_text"))ShareDriverText = data.getString("share_driver_text");
         if (data.has("cur_version"))curVersion = data.getInt("cur_version");
+        if (data.has("activate_unlim"))ActivateUnlim = data.getBoolean("activate_unlim");
+        if (data.has("parkings_buttons"))ParkingButtons = data.getBoolean("parkings_buttons");
 
         if (data.has("template_messages")){
             templateMessages.clear();
@@ -79,6 +82,14 @@ public class Preferences {
         if (data.has("get_data_port")){MainApplication.getInstance().getDot().setGetDataPort(data.getString("get_data_port"));}
 
         if (data.has("check_prior_error")){this.checkPriorErrorText = data.getString("check_prior_error");}
+    }
+
+    public Boolean getActivateUnlim() {
+        return ActivateUnlim;
+    }
+
+    public Boolean getParkingButtons() {
+        return ParkingButtons;
     }
 
     public ArrayList<String> getTemplateMessages() {
