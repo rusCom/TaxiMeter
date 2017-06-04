@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +19,7 @@ public class Account {
     private String Balance;
     private String Name;
     private String serName;
-    private Integer status, lastStatus = -1;
+    private Integer status, lastStatus = -1, AgreementVersion = 0;;
     public RoutePoint routePoint;
     private String NotReadMessageCount;
     public String UnlimInfo = "";
@@ -33,6 +34,8 @@ public class Account {
 
     public Account(String token) {
         Token = token;
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
+        AgreementVersion = sPref.getInt("agreement_version", 0);
     }
 
     public void setFromJSON(JSONObject data) throws JSONException {
@@ -69,6 +72,27 @@ public class Account {
                 }
             });
         }
+    }
+
+    public void setUserAgreementApply(){
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putInt("user_agreement_version", MainApplication.getInstance().getMainPreferences().getAgreementVersion());
+        //Log.d(TAG, "user_agreement_version = " + MainApplication.getInstance().getMainPreferences().getAgreementVersion());
+        AgreementVersion = MainApplication.getInstance().getMainPreferences().getAgreementVersion();
+        editor.apply();
+    }
+
+    public Boolean IsShowAgreement(){
+        Boolean result = false;
+        if (MainApplication.getInstance().getMainPreferences().getAgreementVersion() > 0){
+            if (!MainApplication.getInstance().getMainPreferences().getAgreementLink().equals("")){
+                if (MainApplication.getInstance().getMainPreferences().getAgreementVersion() > AgreementVersion){
+                    result = true;
+                }
+            }
+        }
+        return result;
     }
 
     public String getMainActivityCaption(){

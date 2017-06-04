@@ -19,6 +19,9 @@
     <string name="checkNewVersionCaption">Доступна новая версия программы. Рекомендуем обновить Вашу версию программы.</string>
     <string name="checkNewVersionOk">Обновить</string>
     <string name="checkNewVersionCancel">Позже</string>
+    <!-- UserAgreementDialog -->
+    <string name="tvUserAgreementCaption">Условия использование</string>
+    <string name="tvUserAgreementText">Что бы продолжить, пожалуйста, ознакомьтесь и примите наши Условия и Политику конфиденциальности.</string>
     <!-- Надписи стандартных кнопок -->
     <string name="btnOK">Хорошо</string>
     <string name="btnCancel">Отмена</string>

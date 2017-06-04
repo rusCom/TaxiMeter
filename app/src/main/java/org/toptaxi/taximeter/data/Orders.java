@@ -36,6 +36,15 @@ public class Orders {
         this.onOrdersChangeListener = onOrdersChangeListener;
     }
 
+    public void setFromJSONPrior(JSONArray data) throws JSONException{
+        lOrders.clear();
+        for (int itemID = 0; itemID < data.length(); itemID ++){
+            JSONObject orderJSON = data.getJSONObject(itemID);
+            Order order = new Order(orderJSON);
+            lOrders.add(order);
+        }
+    }
+
     public void setFromJSON(JSONArray data) throws JSONException {
             for (int itemID = 0; itemID < data.length(); itemID ++){
                 JSONObject orderJSON = data.getJSONObject(itemID);

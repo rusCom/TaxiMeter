@@ -16,11 +16,22 @@ import org.toptaxi.taximeter.adapters.RecyclerItemClickListener;
 import org.toptaxi.taximeter.data.Order;
 import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.LockOrientation;
+import org.toptaxi.taximeter.tools.OnPriorOrdersChange;
 
-public class PriorOrderActivity extends AppCompatActivity implements RecyclerItemClickListener.OnItemClickListener {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class PriorOrderActivity extends AppCompatActivity implements RecyclerItemClickListener.OnItemClickListener, OnPriorOrdersChange {
     private static String TAG = "#########" + PriorOrderActivity.class.getName();
     RecyclerView rvPriorOrders;
     RVCurOrdersAdapter curOrdersAdapter;
+    Calendar ServerDate;
+    SimpleDateFormat simpleDateFormat;
+    private Timer mTimer;
+    private MyTimerTask mMyTimerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,10 @@ public class PriorOrderActivity extends AppCompatActivity implements RecyclerIte
         curOrdersAdapter = new RVCurOrdersAdapter(1);
         rvPriorOrders.setAdapter(curOrdersAdapter);
         rvPriorOrders.addOnItemTouchListener(new RecyclerItemClickListener(this, this));
+        MainApplication.getInstance().setOnPriorOrdersChange(this);
+        ServerDate = MainApplication.getInstance().getServerDate();
+        simpleDateFormat = new SimpleDateFormat("HH:mm:ss dd.MM:yyyy", Locale.getDefault());
+        setTitle(simpleDateFormat.format(ServerDate.getTime()));
     }
 
     @Override
@@ -60,31 +75,55 @@ public class PriorOrderActivity extends AppCompatActivity implements RecyclerIte
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+            Log.d(TAG, "StopTimer");
+        }
+    }
 
-    /*
-    new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        //MainApplication.getInstance().setViewOrderID(MainApplication.getInstance().getCurOrders().getOrderID(position));
-                        //MainApplication.getInstance().setMainActivityCurView(Constants.CUR_VIEW_VIEW_ORDER);
-                        final Order curOrder = MainApplication.getInstance().getPriorOrders().getOrder(position);
-                        String alertText = "Принять предварительный заказ " + curOrder.getPriorInfo() + " по маршруту " + curOrder.getRoute();
-                        Log.d(TAG, alertText);
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainApplication.getInstance().getMainActivity());
-                        alertDialog.setTitle("Внимание");
-                        alertDialog.setMessage(alertText);
-                        alertDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                MainApplication.getInstance().setMainActivityCurView(Constants.CUR_VIEW_CUR_ORDERS);
-                                //MainApplication.getInstance().getDot().sendDataResult("check_order", curOrder.ID);
-                                finish();
-                            }
-                        });
-                        alertDialog.setNegativeButton("Нет" , null);
-                        alertDialog.create();
-                        alertDialog.show();
-                    }
-                })
-     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
 
+        // re-schedule timer here
+        // otherwise, IllegalStateException of
+        // "TimerTask is scheduled already"
+        // will be thrown
+        ServerDate = MainApplication.getInstance().getServerDate();
+        mTimer = new Timer();
+        mMyTimerTask = new MyTimerTask();
+        mTimer.schedule(mMyTimerTask, 1000, 1000);
+        Log.d(TAG, "StartTimer");
+    }
+
+    @Override
+    public void OnPriorOrdersChange() {
+        Log.d(TAG, "OnPriorOrdersChange count = " + MainApplication.getInstance().getPriorOrders().getCount());
+        curOrdersAdapter.notifyDataSetChanged();
+        ServerDate = MainApplication.getInstance().getServerDate();
+    }
+
+    class MyTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            ServerDate.add(Calendar.SECOND, 1);
+            final String strDate = simpleDateFormat.format(ServerDate.getTime());
+
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    setTitle(strDate);
+                }
+            });
+        }
+    }
 }

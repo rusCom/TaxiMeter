@@ -20,12 +20,12 @@ public class Preferences {
     public String dispatchingCallCaption, shareDriverInfo = "", checkPriorErrorText = "";
     public Boolean dispatchingCallView = false;
     public String dispatchingCallPhone;
-    public String administrationCallCaption;
+    public String administrationCallCaption, agreementLink = "";
     public Boolean administrationCallView = false;
     public Boolean shareDriver = false;
     public String administrationCallPhone;
     public ClientTariff taximeterTariff;
-    private Integer curTheme, screenOrientation, curVersion;
+    private Integer curTheme, screenOrientation, curVersion, agreementVersion = 0;
     private Boolean checkCurVersion = false;
     private ArrayList<String> templateMessages;
     private Boolean ActivateUnlim = false, ParkingButtons = false;
@@ -82,6 +82,18 @@ public class Preferences {
         if (data.has("get_data_port")){MainApplication.getInstance().getDot().setGetDataPort(data.getString("get_data_port"));}
 
         if (data.has("check_prior_error")){this.checkPriorErrorText = data.getString("check_prior_error");}
+
+        if (data.has("agreement_link")){this.agreementLink = data.getString("agreement_link");}
+        if (data.has("agreement_version")){this.agreementVersion = data.getInt("agreement_version");}
+        Log.d(TAG, "agreement_version = " + this.agreementVersion);
+    }
+
+    public String getAgreementLink() {
+        return agreementLink;
+    }
+
+    public Integer getAgreementVersion() {
+        return agreementVersion;
     }
 
     public Boolean getActivateUnlim() {

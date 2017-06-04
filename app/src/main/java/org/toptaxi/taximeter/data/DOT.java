@@ -88,9 +88,9 @@ public class DOT {
         try {
             String URL = getGetDataRest() + "get=" + AppToken + "&token=" + MainApplication.getInstance().getMainAccount().getToken();
             URL += "&location=" + MainApplication.getInstance().getLocationData();
-            Log.d(TAG, "getData URL = " + URL);
+            //Log.d(TAG, "getData URL = " + URL);
             JSONObject response = new JSONObject(httpGet(URL));
-            Log.d(TAG, "getData response = " + response.toString());
+            //Log.d(TAG, "getData response = " + response.toString());
             if (response.getString("response").equals("ok")){
                 result = Constants.DOT_REST_OK;
                 MainApplication.getInstance().parseData(response);

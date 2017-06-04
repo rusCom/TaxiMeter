@@ -36,9 +36,14 @@ import org.toptaxi.taximeter.data.Preferences;
 import org.toptaxi.taximeter.services.MainService;
 import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
+import org.toptaxi.taximeter.tools.OnPriorOrdersChange;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainApplication extends Application implements LocationListener {
     protected static String TAG = "#########" + MainApplication.class.getName();
@@ -47,6 +52,7 @@ public class MainApplication extends Application implements LocationListener {
     public static MainApplication getInstance(){return mainApplication;}
     private Integer MainActivityCurView, curViewParkingID = 0;
     private OnMainDataChangeListener onMainDataChangeListener;
+    private OnPriorOrdersChange onPriorOrdersChange;
     private Location mainLocation;
     private Account mainAccount;
     private Preferences mainPreferences;
@@ -55,13 +61,14 @@ public class MainApplication extends Application implements LocationListener {
     private Parkings parkings;
     MainActivity mainActivity;
     private Messages mainMessages;
-    String curOrderData = "";
+    String curOrderData = "", priorOrderData = "";
     Integer viewOrderID;
     private Order newOrder, curOrder;
     final Handler uiHandler = new Handler(Looper.getMainLooper());
     public int lastRequestUID = 0;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    private Calendar ServerDate;
 
     @Override
     public void onCreate() {
@@ -72,8 +79,8 @@ public class MainApplication extends Application implements LocationListener {
         Log.d(TAG, "onCreate fbToken = " + FirebaseInstanceId.getInstance().getToken());
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
-        //mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        ServerDate = Calendar.getInstance();
     }
 
     @Override
@@ -135,12 +142,39 @@ public class MainApplication extends Application implements LocationListener {
 
     }
 
+    public void setOnPriorOrdersChange(OnPriorOrdersChange onPriorOrdersChange) {
+        this.onPriorOrdersChange = onPriorOrdersChange;
+    }
+
+    public Calendar getServerDate() {
+        return ServerDate;
+    }
+
     public void parseData(JSONObject dataJSON) throws JSONException{
         if (dataJSON.has("requestUID")){lastRequestUID = dataJSON.getInt("requestUID");}
         if (dataJSON.has("account")){getMainAccount().setFromJSON(dataJSON.getJSONArray("account").getJSONObject(0));}
         if (dataJSON.has("preferences")){getMainPreferences().setFromJSON(dataJSON.getJSONArray("preferences").getJSONObject(0));}
         if (dataJSON.has("orders")){getCurOrders().setFromJSON(dataJSON.getJSONArray("orders"));}
-        if (dataJSON.has("prior_orders")){getPriorOrders().setFromJSON(dataJSON.getJSONArray("prior_orders"));}
+        if (dataJSON.has("prior_orders")){
+            //Log.d(TAG, "prior orders count = " + getPriorOrders().getCount());
+            //Log.d(TAG, "priorOrderData = " + dataJSON.getJSONArray("prior_orders").length());
+            if (!priorOrderData.equals(dataJSON.getJSONArray("prior_orders").toString())){
+                //Log.d(TAG, "prior order data change");
+                //Log.d(TAG, "priorOrderData = " + priorOrderData);
+                //Log.d(TAG, "priorOrderData = " + dataJSON.getJSONArray("prior_orders").toString());
+                priorOrderData = dataJSON.getJSONArray("prior_orders").toString();
+                getPriorOrders().setFromJSONPrior(dataJSON.getJSONArray("prior_orders"));
+                if ((onPriorOrdersChange != null) && (getPriorOrders() != null)){
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onPriorOrdersChange.OnPriorOrdersChange();
+                        }
+                    });
+                }
+
+            }
+        }
         if (dataJSON.has("messages")){getMainMessages().OnNewMessages(dataJSON.getJSONArray("messages"));}
         if (dataJSON.has("hisMessages")){getMainMessages().setFromJSON(dataJSON.getJSONArray("hisMessages"));}
         if (dataJSON.has("parkingList")){getParkings().setFromJSON(dataJSON.getJSONArray("parkingList"));}
@@ -162,6 +196,12 @@ public class MainApplication extends Application implements LocationListener {
             }
 
         }
+
+        if (dataJSON.has("date")){
+            ServerDate.setTimeInMillis(Timestamp.valueOf(dataJSON.getString("date")).getTime());
+            //Log.d(TAG, "date = " + new SimpleDateFormat("HH:mm:ss dd.MM", Locale.getDefault()).format(ServerDate.getTime()));
+        }
+
         if (onMainDataChangeListener != null){
             uiHandler.post(new Runnable() {
                 @Override

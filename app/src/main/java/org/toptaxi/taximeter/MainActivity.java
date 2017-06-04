@@ -71,6 +71,7 @@ import org.toptaxi.taximeter.data.Orders;
 import org.toptaxi.taximeter.data.Parking;
 import org.toptaxi.taximeter.data.RoutePoint;
 import org.toptaxi.taximeter.data.UnlimTariff;
+import org.toptaxi.taximeter.dialogs.UserAgreementDialog;
 import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.FontFitTextView;
 import org.toptaxi.taximeter.tools.LockOrientation;
@@ -221,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         mapFragment.getMapAsync(this);
 
 
-
     }
 
     @Override
@@ -267,6 +267,12 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 alertDialog.create();
                 alertDialog.show();
                 MainApplication.getInstance().getMainPreferences().setCheckCurVersion();
+            }
+            // Проверяем на принятие пользовательского соглашение
+            else if (MainApplication.getInstance().getMainAccount().IsShowAgreement()){
+                Log.d(TAG, "new agreement link");
+                UserAgreementDialog userAgreementDialog = new UserAgreementDialog(this);
+                userAgreementDialog.show();
             }
             OnMainLocationChange();
         }
