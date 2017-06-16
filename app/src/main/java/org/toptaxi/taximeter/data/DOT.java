@@ -16,19 +16,24 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DOT {
     protected static String TAG = "#########" + DOT.class.getName();
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private String AppToken, HostIP, getDataPort, sendDataPort;
+    OkHttpClient httpClient;
 
     public DOT() {
         AppToken = MainApplication.getInstance().getPackageName();
         HostIP = MainApplication.getInstance().getResources().getString(R.string.mainIP);
         getDataPort = MainApplication.getInstance().getResources().getString(R.string.loginPort);
         sendDataPort = MainApplication.getInstance().getResources().getString(R.string.loginPort);
+        httpClient = new OkHttpClient();
     }
 
     void setGetDataPort(String getDataPort) {
@@ -310,7 +315,7 @@ public class DOT {
         }
     }
     public static String httpGet(String url)  {
-        String result = "{\"response\":\"httpError\", \"value\":\"" + MainApplication.getInstance().getResources().getString(R.string.errorConnection) + "\"}";
+        String result = "{\"response\":\"httpError\", \"status\":\"error\",\"value\":\"" + MainApplication.getInstance().getResources().getString(R.string.errorConnection) + "\"}";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
@@ -323,6 +328,60 @@ public class DOT {
             e.printStackTrace();
         }
         if (response != null)response.body().close();
+        return result;
+    }
+
+    public DOTResponse httpGetDOT(String url){
+        DOTResponse result = new DOTResponse(400);
+        if (url.equals(""))return result;
+        Response response = null;
+        try {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            response = httpClient.newCall(request).execute();
+            //Log.d(TAG, "httpGet main_ur success");
+        } catch (IOException e) {
+            e.printStackTrace();
+            //Log.d(TAG, "httpGet main_ur unsuccessful");
+        }
+        if (response != null){
+            String responseBody = "";
+            try {
+                responseBody = response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            result.Set(response.code(), responseBody);
+
+        }
+        return result;
+    }
+
+    public DOTResponse httpPostDOT(String url, String body){
+        DOTResponse result = new DOTResponse(400);
+        if (url.equals(""))return result;
+        Response response = null;
+        RequestBody requestBody = RequestBody.create(JSON, body);
+        try {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(requestBody)
+                    .build();
+            response = httpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (response != null){
+            String responseBody = "";
+            try {
+                responseBody = response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            result.Set(response.code(), responseBody);
+
+        }
         return result;
     }
 

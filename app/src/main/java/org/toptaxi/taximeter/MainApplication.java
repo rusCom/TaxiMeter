@@ -37,6 +37,7 @@ import org.toptaxi.taximeter.services.MainService;
 import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
 import org.toptaxi.taximeter.tools.OnPriorOrdersChange;
+import org.toptaxi.taximeter.tools.PlacesAPI;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -69,6 +70,8 @@ public class MainApplication extends Application implements LocationListener {
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Calendar ServerDate;
+    private PlacesAPI mPlacesAPI;
+    private String curPlaceName;
 
     @Override
     public void onCreate() {
@@ -81,6 +84,7 @@ public class MainApplication extends Application implements LocationListener {
         mLocationRequest.setInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         ServerDate = Calendar.getInstance();
+        curPlaceName = "";
     }
 
     @Override
@@ -100,7 +104,21 @@ public class MainApplication extends Application implements LocationListener {
             //mainLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+        getPlacesAPI().setGoogleApiClient(this.mGoogleApiClient);
 
+    }
+
+    public PlacesAPI getPlacesAPI() {
+        if (mPlacesAPI == null){mPlacesAPI = new PlacesAPI();}
+        return mPlacesAPI;
+    }
+
+    public String getCurPlaceName() {
+        return curPlaceName;
+    }
+
+    public void setCurPlaceName(String curPlaceName) {
+        this.curPlaceName = curPlaceName;
     }
 
     public GoogleApiClient getGoogleApiClient() {

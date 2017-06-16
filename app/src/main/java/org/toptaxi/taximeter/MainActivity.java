@@ -77,6 +77,7 @@ import org.toptaxi.taximeter.tools.FontFitTextView;
 import org.toptaxi.taximeter.tools.LockOrientation;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
 
+import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -496,16 +497,19 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             viewMainData.setVisibility(View.VISIBLE);
             viewGPSError.setVisibility(View.GONE);
             fabMainActions.setVisibility(View.VISIBLE);
-            String Data = MainApplication.getInstance().getLocationData();
+            if (!MainApplication.getInstance().getCurPlaceName().equals(""))tvGPSStatus.setText(MainApplication.getInstance().getCurPlaceName());
+            else tvGPSStatus.setText(MainApplication.getInstance().getLocationData());
             /*
             String Data = "["+ MainApplication.getInstance().getMainLocation().getLatitude() +", "+ MainApplication.getInstance().getMainLocation().getLongitude() +"]";
             Data += "[" + MainApplication.getInstance().getMainLocation().getProvider() + ";" + MainApplication.getInstance().getMainLocation().getAccuracy() + "]";
                     //+";" + MainApplication.getInstance().getMainLocation().getExtras().getInt("satellites") + "]";
              */
+            /*
             if (MainApplication.getInstance().getMainAccount().routePoint != null){
                 Data += " " + MainApplication.getInstance().getMainAccount().routePoint.getNameForFind();
             }
-            tvGPSStatus.setText(Data);
+            */
+
         }
     }
 
@@ -694,6 +698,10 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
 
         drawer.addItem(new DividerDrawerItem());
+        if (MainApplication.getInstance().getMainPreferences().isShowFAQ()){
+            drawer.addItem(new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().getFaqCaption()).withIcon(FontAwesome.Icon.faw_question).withSelectable(false).withIdentifier(Constants.MENU_FAQ));
+
+        }
 
         if (MainApplication.getInstance().getMainPreferences().dispatchingCallView){
             drawer.addItem(new PrimaryDrawerItem().withName("Позвонить диспетчеру").withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_DISPATCHING));
@@ -744,6 +752,11 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             case Constants.MENU_CALL_ADMINISTRATION:callIntent(MainApplication.getInstance().getMainPreferences().administrationCallPhone);break;
             case Constants.MENU_CALL_DISPATCHING:callIntent(MainApplication.getInstance().getMainPreferences().dispatchingCallPhone);break;
             case Constants.MENU_HIS_ORDERS:startActivity(new Intent(MainActivity.this, HisOrdersActivity.class));break;
+            case Constants.MENU_FAQ:
+                Uri address = Uri.parse(MainApplication.getInstance().getMainPreferences().getFaqLink());
+                Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
+                startActivity(openlinkIntent);
+                break;
 
         }
         return false;

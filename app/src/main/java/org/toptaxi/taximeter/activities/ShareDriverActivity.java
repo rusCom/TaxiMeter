@@ -133,38 +133,6 @@ public class ShareDriverActivity extends AppCompatActivity {
 
         showDialog("Приглашение успешно отправлено", true);
 
-        /*
-
-        Log.d(TAG, "sendSMS smsText = " + smsText + " phone = " + phone);
-        ArrayList<String> partsOfText = sms.divideMessage(smsText);
-        ArrayList<PendingIntent> sentPIarr = new ArrayList<PendingIntent>();
-        ArrayList<PendingIntent> deliveredPIarr = new ArrayList<PendingIntent>();
-        for (int i = 0; i < parts.size(); i++) {
-            sentPIarr.add(PendingIntent.getBroadcast(this, 0,new Intent(SENT), 0));
-            deliveredPIarr.add(PendingIntent.getBroadcast(this, 0,new Intent(DELIVERED), 0));
-        }
-
-        SmsManager sms = SmsManager.getDefault();
-        if (sms == null)showDialog("SMSManager = null", true);
-        else{
-            ArrayList<String> partsOfText = sms.divideMessage(smsText);
-            Log.d(TAG, "parts = " + partsOfText.toString());
-            if (partsOfText != null){
-                sms.
-                        sendMultipartTextMessage(
-                                phone,
-                                null,
-                                //sms.divideMessage(smsText),
-                                partsOfText,
-                                sentPIarr,
-                                deliveredPIarr);
-                showDialog("Приглашение успешно отправлено", true);
-
-            }
-            else {Log.d(TAG, "partsOfText = null");}
-
-        }
-        */
 
     }
 

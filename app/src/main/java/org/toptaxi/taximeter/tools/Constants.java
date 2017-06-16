@@ -51,6 +51,7 @@ public class Constants {
     public static final int MENU_SHARE_DRIVER           = 209;
     public static final int MENU_HIS_ORDERS             = 210;
     public static final int MENU_TEMPLATE_MESSAGE       = 211;
+    public static final int MENU_FAQ                    = 212;
 
     public static final int MAIN_ACTION_GO_ONLINE       = 100;
     public static final int MAIN_ACTION_GO_OFFLINE      = 101;
@@ -71,6 +72,14 @@ public class Constants {
     public static final int MY_PERMISSIONS_CALL_PHONE       = 103;
     public static final int MY_PERMISSIONS_READ_CONTACTS    = 104;
     public static final int MY_PERMISSIONS_SEND_SMS         = 105;
+
+    public static final int ROUTE_POINT_TYPE_UNKNOWN        = 0;
+    public static final int ROUTE_POINT_TYPE_STREET         = 1;
+    public static final int ROUTE_POINT_TYPE_HOUSE          = 2;
+    public static final int ROUTE_POINT_TYPE_LOCALITY       = 3;
+    public static final int ROUTE_POINT_TYPE_POINT          = 4;
+    public static final int ROUTE_POINT_TYPE_AIRPORT        = 100;
+    public static final int ROUTE_POINT_TYPE_STATION        = 101;
 
 
 

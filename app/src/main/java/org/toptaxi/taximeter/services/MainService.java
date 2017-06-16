@@ -123,7 +123,9 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
         new Thread(new Runnable() {
             public void run() {
 
-                Integer calcTimer = 0;
+                Integer calcTimer = 0,
+                        placesTimer = MainApplication.getInstance().getMainPreferences().getPlacesTimeOut();
+
                 while (isRunning){
 
                     MainApplication.getInstance().getDot().getData();
@@ -135,6 +137,12 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
                         calcTimer = 0;
                         calcBaseDistance();
                     }
+                    placesTimer += MainApplication.getInstance().getMainPreferences().getDataTimer();
+                    if (placesTimer >= MainApplication.getInstance().getMainPreferences().getPlacesTimeOut()){
+                        placesTimer = 0;
+                        MainApplication.getInstance().getPlacesAPI().getCurPlace();
+                    }
+
                     try {
                         TimeUnit.SECONDS.sleep(MainApplication.getInstance().getMainPreferences().getDataTimer());
                     } catch (InterruptedException e) {

@@ -17,7 +17,7 @@ public class Preferences {
     private String balanceCaption, ShareDriverText = "";
     public Boolean balanceView;
     private Integer dataTimer;
-    public String dispatchingCallCaption, shareDriverInfo = "", checkPriorErrorText = "";
+    public String dispatchingCallCaption, shareDriverInfo = "", checkPriorErrorText = "", faqCaption = "", faqLink = "";
     public Boolean dispatchingCallView = false;
     public String dispatchingCallPhone;
     public String administrationCallCaption, agreementLink = "";
@@ -25,7 +25,7 @@ public class Preferences {
     public Boolean shareDriver = false;
     public String administrationCallPhone;
     public ClientTariff taximeterTariff;
-    private Integer curTheme, screenOrientation, curVersion, agreementVersion = 0;
+    private Integer curTheme, screenOrientation, curVersion, agreementVersion = 0, placesTimeOut = 60;
     private Boolean checkCurVersion = false;
     private ArrayList<String> templateMessages;
     private Boolean ActivateUnlim = false, ParkingButtons = false;
@@ -85,7 +85,25 @@ public class Preferences {
 
         if (data.has("agreement_link")){this.agreementLink = data.getString("agreement_link");}
         if (data.has("agreement_version")){this.agreementVersion = data.getInt("agreement_version");}
-        Log.d(TAG, "agreement_version = " + this.agreementVersion);
+        if (data.has("places_timeout")){this.placesTimeOut = data.getInt("places_timeout");}
+        if (data.has("faq_caption")){this.faqCaption = data.getString("faq_caption");}
+        if (data.has("faq_link")){this.faqLink = data.getString("faq_link");}
+    }
+
+    public Boolean isShowFAQ(){
+        return (!faqCaption.equals("")) && (!faqLink.equals(""));
+    }
+
+    public String getFaqCaption() {
+        return faqCaption;
+    }
+
+    public String getFaqLink() {
+        return faqLink;
+    }
+
+    public Integer getPlacesTimeOut() {
+        return placesTimeOut;
     }
 
     public String getAgreementLink() {
