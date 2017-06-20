@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import org.toptaxi.taximeter.data.Account;
 import org.toptaxi.taximeter.data.DOT;
 import org.toptaxi.taximeter.data.MainActionItem;
+import org.toptaxi.taximeter.data.MenuItems;
 import org.toptaxi.taximeter.data.Messages;
 import org.toptaxi.taximeter.data.Order;
 import org.toptaxi.taximeter.data.Orders;
@@ -72,6 +74,7 @@ public class MainApplication extends Application implements LocationListener {
     private Calendar ServerDate;
     private PlacesAPI mPlacesAPI;
     private String curPlaceName;
+    private MenuItems menuItems;
 
     @Override
     public void onCreate() {
@@ -106,6 +109,11 @@ public class MainApplication extends Application implements LocationListener {
         }
         getPlacesAPI().setGoogleApiClient(this.mGoogleApiClient);
 
+    }
+
+    public MenuItems getMenuItems() {
+        if (menuItems == null)menuItems = new MenuItems();
+        return menuItems;
     }
 
     public PlacesAPI getPlacesAPI() {
@@ -255,7 +263,7 @@ public class MainApplication extends Application implements LocationListener {
             if (getMainAccount().getStatus() == Constants.DRIVER_OFFLINE)mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_GO_ONLINE, "Встать на автораздачу"));
             if (getMainAccount().getStatus() == Constants.DRIVER_ONLINE)mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_GO_OFFLINE, "Сняться с автораздачи"));
             //mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_ORDER_SETTINGS, "Настройка автораздачи"));
-            if (getMainPreferences().getActivateUnlim()){
+            if (getMenuItems().getUnlim()){
                 if (getMainAccount().UnlimInfo.equals(""))mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_ACTIVATE_UNLIM, "Активировать безлимит"));
             }
             mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_PRIOR_ORDER, "Предварительные заказы"));
@@ -270,7 +278,8 @@ public class MainApplication extends Application implements LocationListener {
 
         }
 
-        mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_SEND_MESSAGE, "Отправить сообщение"));
+        if (MainApplication.getInstance().getMenuItems().getDispatcherMessages())
+            mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_SEND_MESSAGE, "Отправить сообщение"));
         return mainActionItems;
     }
 
@@ -458,4 +467,13 @@ public class MainApplication extends Application implements LocationListener {
     }
 
     /// ***********************************
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String source) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(source);
+        }
+    }
+
 }

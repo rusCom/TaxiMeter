@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -31,6 +32,7 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
     private View footer;
     LoadMoreAsyncTask loadMoreAsyncTask = new LoadMoreAsyncTask();
     boolean isFirst = true;
+    RelativeLayout rlSendForm;
 
 
     @Override
@@ -66,6 +68,10 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
             }
         });
 
+        rlSendForm = (RelativeLayout)findViewById(R.id.rlActivityMessagesSendForm);
+
+
+
     }
 
     @Override
@@ -74,6 +80,9 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
         adapter.notifyDataSetChanged();
         listView.setSelection(listView.getCount());
         MainApplication.getInstance().getMainMessages().setOnMessagesListener(this);
+
+        if (MainApplication.getInstance().getMenuItems().getDispatcherMessages())rlSendForm.setVisibility(View.VISIBLE);
+        else {rlSendForm.setVisibility(View.GONE);}
     }
 
     @Override

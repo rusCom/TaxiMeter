@@ -677,7 +677,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
         balanceItem = new PrimaryDrawerItem().withName("Баланс").withIcon(FontAwesome.Icon.faw_rub).withSelectable(false).withBadge(MainApplication.getInstance().getMainAccount().getBalance()).withIdentifier(Constants.MENU_BALANCE);
         drawer.addItem(balanceItem);
-        if (MainApplication.getInstance().getMainPreferences().getActivateUnlim()){
+        if (MainApplication.getInstance().getMenuItems().getUnlim()){
             unlimInfo = new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainAccount().UnlimInfo).withIcon(FontAwesome.Icon.faw_fire).withSelectable(false).withIdentifier(Constants.MENU_ACITVATE_UNLIM);
             drawer.addItem(unlimInfo);
         }
@@ -686,8 +686,12 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         drawer.addItem(new DividerDrawerItem());
         //drawer.addItem(new PrimaryDrawerItem().withName("Таксометр").withIcon(FontAwesome.Icon.faw_taxi).withSelectable(false).withIdentifier(Constants.MENU_TAXIMETER));
 
-        messagesItem = new PrimaryDrawerItem().withName("Сообщения").withIcon(FontAwesome.Icon.faw_commenting_o).withSelectable(false).withBadge(String.valueOf(MainApplication.getInstance().getMainAccount().getNotReadMessageCount())).withIdentifier(Constants.MENU_MESSAGES);
-        drawer.addItem(messagesItem);
+        if (MainApplication.getInstance().getMenuItems().getMessages()){
+            messagesItem = new PrimaryDrawerItem().withName("Сообщения").withIcon(FontAwesome.Icon.faw_commenting_o).withSelectable(false).withBadge(String.valueOf(MainApplication.getInstance().getMainAccount().getNotReadMessageCount())).withIdentifier(Constants.MENU_MESSAGES);
+            drawer.addItem(messagesItem);
+        }
+
+
         drawer.addItem(new PrimaryDrawerItem().withName("Статистика").withIcon(FontAwesome.Icon.faw_cube).withSelectable(false).withIdentifier(Constants.MENU_STATISTICS));
         if (MainApplication.getInstance().getMainPreferences().shareDriver){
             drawer.addItem(new PrimaryDrawerItem().withName("Пригласить друга").withIcon(FontAwesome.Icon.faw_share_alt).withSelectable(false).withIdentifier(Constants.MENU_SHARE_DRIVER));
@@ -780,10 +784,12 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             profile.withName(MainApplication.getInstance().getMainAccount().getName());
             profile.withEmail(MainApplication.getInstance().getMainAccount().getSerName());
             accountHeader.updateProfile(profile);
-            messagesItem.withBadge(MainApplication.getInstance().getMainAccount().getNotReadMessageCount());
-            drawer.updateItem(messagesItem);
+            if (messagesItem != null){
+                messagesItem.withBadge(MainApplication.getInstance().getMainAccount().getNotReadMessageCount());
+                drawer.updateItem(messagesItem);
+            }
 
-            if (MainApplication.getInstance().getMainPreferences().getActivateUnlim()){
+            if (MainApplication.getInstance().getMenuItems().getUnlim()){
                 if (MainApplication.getInstance().getMainAccount().UnlimInfo.equals(""))
                     unlimInfo.withName("На процентах");
                 else unlimInfo.withName(MainApplication.getInstance().getMainAccount().UnlimInfo);

@@ -13,9 +13,9 @@
         android:id="@+id/lvMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/form" />
+        android:layout_above="@+id/rlActivityMessagesSendForm" />
     <RelativeLayout
-        android:id="@+id/form"
+        android:id="@+id/rlActivityMessagesSendForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -45,7 +45,7 @@ public class PlacesAPI {
         Location mLocation = MainApplication.getInstance().getMainLocation();
         if (mLocation != null){
             String httpRequest = "http://" + geoIP + ":" + geoPort + "/get_android_location_point?latitude=" + mLocation.getLatitude() + "&longitude=" + mLocation.getLongitude();
-            Log.d(TAG, "getCurPlaceByCache " + httpRequest);
+            //Log.d(TAG, "getCurPlaceByCache " + httpRequest);
             DOTResponse dotResponse = MainApplication.getInstance().getDot().httpGetDOT(httpRequest);
             if (dotResponse.getCode() == 200){
                 resultRoutePoint = new RoutePoint();
@@ -68,7 +68,7 @@ public class PlacesAPI {
             if (mLocation != null){
                 String httpRequest = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + String.valueOf(mLocation.getLatitude()) +"," + String.valueOf(mLocation.getLongitude());
                 httpRequest += "&language=" + Locale.getDefault().toString();
-                Log.d(TAG, "getCurPlaceByGoogleAPIClient " + httpRequest);
+                //Log.d(TAG, "getCurPlaceByGoogleAPIClient " + httpRequest);
                 DOTResponse dotResponse = MainApplication.getInstance().getDot().httpGetDOT(httpRequest);
                 if (dotResponse.getCode() == 200){
                     try {
@@ -142,7 +142,7 @@ public class PlacesAPI {
                         cacheData.put("latitude", String.valueOf(mLocation.getLatitude()));
                         cacheData.put("longitude", String.valueOf(mLocation.getLongitude()));
                         cacheData.put("point", resultRoutePoint.toJSON());
-                        Log.d(TAG, url + ";" + cacheData.toString());
+                        //Log.d(TAG, url + ";" + cacheData.toString());
                         MainApplication.getInstance().getDot().httpPostDOT(url, cacheData.toString());
                     }
                 } catch (JSONException e) {

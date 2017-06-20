@@ -28,7 +28,7 @@ public class Preferences {
     private Integer curTheme, screenOrientation, curVersion, agreementVersion = 0, placesTimeOut = 60;
     private Boolean checkCurVersion = false;
     private ArrayList<String> templateMessages;
-    private Boolean ActivateUnlim = false, ParkingButtons = false;
+    private Boolean ActivateUnlim = false, ParkingButtons = false, Messages = false;
 
     public Preferences(){
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
@@ -88,6 +88,7 @@ public class Preferences {
         if (data.has("places_timeout")){this.placesTimeOut = data.getInt("places_timeout");}
         if (data.has("faq_caption")){this.faqCaption = data.getString("faq_caption");}
         if (data.has("faq_link")){this.faqLink = data.getString("faq_link");}
+        if (data.has("menu")){MainApplication.getInstance().getMenuItems().setFromJSON(data.getJSONObject("menu"));}
     }
 
     public Boolean isShowFAQ(){
