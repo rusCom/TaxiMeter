@@ -14,21 +14,19 @@ import java.util.ArrayList;
 
 public class Preferences {
     protected static String TAG = "#########" + Preferences.class.getName();
-    private String balanceCaption, ShareDriverText = "";
+    private String balanceCaption;
     public Boolean balanceView;
     private Integer dataTimer;
-    public String dispatchingCallCaption, shareDriverInfo = "", checkPriorErrorText = "", faqCaption = "", faqLink = "";
-    public Boolean dispatchingCallView = false;
-    public String dispatchingCallPhone;
-    public String administrationCallCaption, agreementLink = "";
-    public Boolean administrationCallView = false;
-    public Boolean shareDriver = false;
-    public String administrationCallPhone;
+    public String checkPriorErrorText = "";
+    public String agreementLink = "";
     public ClientTariff taximeterTariff;
     private Integer curTheme, screenOrientation, curVersion, agreementVersion = 0, placesTimeOut = 60;
     private Boolean checkCurVersion = false;
     private ArrayList<String> templateMessages;
-    private Boolean ActivateUnlim = false, ParkingButtons = false, Messages = false;
+    private Boolean ActivateUnlim = false, ParkingButtons = false;
+
+    private Boolean Friends = false, DispatcherMessages = false;
+    private String FriendsCaption = "", FriendsText = "", DispatcherPhone = "", ClientsFriendsText = "", administrationCallPhone = "", faqLink = "";
 
     public Preferences(){
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
@@ -46,7 +44,6 @@ public class Preferences {
     }
 
     public void setFromJSON(JSONObject data) throws JSONException {
-        if (data.has("share_driver_text"))ShareDriverText = data.getString("share_driver_text");
         if (data.has("cur_version"))curVersion = data.getInt("cur_version");
         if (data.has("activate_unlim"))ActivateUnlim = data.getBoolean("activate_unlim");
         if (data.has("parkings_buttons"))ParkingButtons = data.getBoolean("parkings_buttons");
@@ -65,18 +62,11 @@ public class Preferences {
         this.balanceCaption = data.getString("balance_caption");
         this.balanceView = data.getBoolean("balance_view");
         this.dataTimer = data.getInt("timer");
-        this.dispatchingCallCaption = data.getString("dispathing_call_caption");
-        this.dispatchingCallView = data.getBoolean("dispathing_call");
-        this.dispatchingCallPhone = data.getString("dispathing_call_phone");
-        this.administrationCallCaption = data.getString("administration_call_caption");
-        this.administrationCallView = data.getBoolean("administration_call");
         this.administrationCallPhone = data.getString("administration_call_phone");
 
         if (data.has("taximeterTariff")) {
             taximeterTariff.setFromJSON(data.getJSONArray("taximeterTariff").getJSONObject(0));
         }
-        if (data.has("share_driver"))this.shareDriver = data.getBoolean("share_driver");
-        if (data.has("share_driver_info"))this.shareDriverInfo = data.getString("share_driver_info");
 
         if (data.has("send_data_port")){MainApplication.getInstance().getDot().setSendDataPort(data.getString("send_data_port"));}
         if (data.has("get_data_port")){MainApplication.getInstance().getDot().setGetDataPort(data.getString("get_data_port"));}
@@ -86,17 +76,49 @@ public class Preferences {
         if (data.has("agreement_link")){this.agreementLink = data.getString("agreement_link");}
         if (data.has("agreement_version")){this.agreementVersion = data.getInt("agreement_version");}
         if (data.has("places_timeout")){this.placesTimeOut = data.getInt("places_timeout");}
-        if (data.has("faq_caption")){this.faqCaption = data.getString("faq_caption");}
         if (data.has("faq_link")){this.faqLink = data.getString("faq_link");}
         if (data.has("menu")){MainApplication.getInstance().getMenuItems().setFromJSON(data.getJSONObject("menu"));}
+
+        if (data.has("friends")){
+            this.Friends = true;
+            JSONObject friends = data.getJSONObject("friends");
+            this.FriendsText = friends.getString("text");
+            this.FriendsCaption = friends.getString("caption");
+        }
+        if (data.has("dispatcher")){
+            JSONObject d = data.getJSONObject("dispatcher");
+            if (d.has("phone"))this.DispatcherPhone = d.getString("phone");
+            if (d.has("messages"))this.DispatcherMessages = d.getBoolean("messages");
+        }
+        if (data.has("client_friends_text"))this.ClientsFriendsText = data.getString("client_friends_text");
     }
 
-    public Boolean isShowFAQ(){
-        return (!faqCaption.equals("")) && (!faqLink.equals(""));
+    public String getAdministrationCallPhone() {
+        return administrationCallPhone;
     }
 
-    public String getFaqCaption() {
-        return faqCaption;
+    public String getClientsFriendsText() {
+        return ClientsFriendsText;
+    }
+
+    public Boolean getFriends() {
+        return Friends;
+    }
+
+    public String getFriendsCaption() {
+        return FriendsCaption;
+    }
+
+    public String getFriendsText() {
+        return FriendsText;
+    }
+
+    public Boolean getDispatcherMessages() {
+        return DispatcherMessages;
+    }
+
+    public String getDispatcherPhone() {
+        return DispatcherPhone;
     }
 
     public String getFaqLink() {
@@ -142,9 +164,6 @@ public class Preferences {
         checkCurVersion = true;
     }
 
-    public String getShareDriverText() {
-        return ShareDriverText;
-    }
 
     public String getCheckPriorErrorText() {
         return checkPriorErrorText;

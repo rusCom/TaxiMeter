@@ -693,8 +693,11 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
 
         drawer.addItem(new PrimaryDrawerItem().withName("Статистика").withIcon(FontAwesome.Icon.faw_cube).withSelectable(false).withIdentifier(Constants.MENU_STATISTICS));
-        if (MainApplication.getInstance().getMainPreferences().shareDriver){
+        if (MainApplication.getInstance().getMainPreferences().getFriends()){
             drawer.addItem(new PrimaryDrawerItem().withName("Пригласить друга").withIcon(FontAwesome.Icon.faw_share_alt).withSelectable(false).withIdentifier(Constants.MENU_SHARE_DRIVER));
+        }
+        if (!MainApplication.getInstance().getMainPreferences().getClientsFriendsText().equals("")){
+            drawer.addItem(new PrimaryDrawerItem().withName("Посоветовать клиенту").withIcon(FontAwesome.Icon.faw_share).withSelectable(false).withIdentifier(Constants.MENU_SHARE_CLIENT));
         }
 
         drawer.addItem(new PrimaryDrawerItem().withName(getString(R.string.drawerHisOrders)).withIcon(FontAwesome.Icon.faw_history).withSelectable(false).withIdentifier(Constants.MENU_HIS_ORDERS));
@@ -702,16 +705,16 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
 
         drawer.addItem(new DividerDrawerItem());
-        if (MainApplication.getInstance().getMainPreferences().isShowFAQ()){
-            drawer.addItem(new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().getFaqCaption()).withIcon(FontAwesome.Icon.faw_question).withSelectable(false).withIdentifier(Constants.MENU_FAQ));
+        if (!MainApplication.getInstance().getMainPreferences().getFaqLink().equals("")){
+            drawer.addItem(new PrimaryDrawerItem().withName("Это Важно").withIcon(FontAwesome.Icon.faw_question).withSelectable(false).withIdentifier(Constants.MENU_FAQ));
 
         }
 
-        if (MainApplication.getInstance().getMainPreferences().dispatchingCallView){
+        if (!MainApplication.getInstance().getMainPreferences().getDispatcherPhone().equals("")){
             drawer.addItem(new PrimaryDrawerItem().withName("Позвонить диспетчеру").withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_DISPATCHING));
         }
-        if (MainApplication.getInstance().getMainPreferences().administrationCallView){
-            drawer.addItem(new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().administrationCallCaption).withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_ADMINISTRATION));
+        if (!MainApplication.getInstance().getMainPreferences().getAdministrationCallPhone().equals("")){
+            drawer.addItem(new PrimaryDrawerItem().withName("Позвонить в администрацию").withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_ADMINISTRATION));
         }
         themeItem = new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().getThemeName()).withSelectable(false).withIcon(FontAwesome.Icon.faw_exchange).withIdentifier(Constants.MENU_THEME);
         drawer.addItem(themeItem);
@@ -753,13 +756,20 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 Intent shareDriverIntent = new Intent(MainActivity.this, ShareDriverActivity.class);
                 startActivity(shareDriverIntent);
                 break;
-            case Constants.MENU_CALL_ADMINISTRATION:callIntent(MainApplication.getInstance().getMainPreferences().administrationCallPhone);break;
-            case Constants.MENU_CALL_DISPATCHING:callIntent(MainApplication.getInstance().getMainPreferences().dispatchingCallPhone);break;
+            case Constants.MENU_CALL_ADMINISTRATION:callIntent(MainApplication.getInstance().getMainPreferences().getAdministrationCallPhone());break;
+            case Constants.MENU_CALL_DISPATCHING:callIntent(MainApplication.getInstance().getMainPreferences().getDispatcherPhone());break;
             case Constants.MENU_HIS_ORDERS:startActivity(new Intent(MainActivity.this, HisOrdersActivity.class));break;
             case Constants.MENU_FAQ:
                 Uri address = Uri.parse(MainApplication.getInstance().getMainPreferences().getFaqLink());
                 Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
                 startActivity(openlinkIntent);
+                break;
+            case Constants.MENU_SHARE_CLIENT:
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getMainPreferences().getClientsFriendsText());
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
 
         }
@@ -789,7 +799,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 drawer.updateItem(messagesItem);
             }
 
-            if (MainApplication.getInstance().getMenuItems().getUnlim()){
+            if ((MainApplication.getInstance().getMenuItems().getUnlim()) && (unlimInfo != null)){
                 if (MainApplication.getInstance().getMainAccount().UnlimInfo.equals(""))
                     unlimInfo.withName("На процентах");
                 else unlimInfo.withName(MainApplication.getInstance().getMainAccount().UnlimInfo);

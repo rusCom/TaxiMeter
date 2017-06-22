@@ -48,13 +48,12 @@ public class ShareDriverActivity extends AppCompatActivity {
     String mContactId;
     String mPhoneNumber;
     String mContactName;
-    String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_driver);
-        ((TextView)findViewById(R.id.tvShareDriverInfo)).setText(MainApplication.getInstance().getMainPreferences().shareDriverInfo);
+        ((TextView)findViewById(R.id.tvShareDriverInfo)).setText(MainApplication.getInstance().getMainPreferences().getFriendsCaption());
         ilSharedDriverPhone = (TextInputLayout)findViewById(R.id.ilSharedDriverPhone);
         edPhone = (EditText)findViewById(R.id.edShareDriverPhone);
         edPhone.setText("");
@@ -140,7 +139,7 @@ public class ShareDriverActivity extends AppCompatActivity {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getMainPreferences().getShareDriverText());
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getMainPreferences().getFriendsText());
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 

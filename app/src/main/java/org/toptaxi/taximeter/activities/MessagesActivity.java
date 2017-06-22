@@ -81,7 +81,7 @@ public class MessagesActivity extends AppCompatActivity implements AbsListView.O
         listView.setSelection(listView.getCount());
         MainApplication.getInstance().getMainMessages().setOnMessagesListener(this);
 
-        if (MainApplication.getInstance().getMenuItems().getDispatcherMessages())rlSendForm.setVisibility(View.VISIBLE);
+        if (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())rlSendForm.setVisibility(View.VISIBLE);
         else {rlSendForm.setVisibility(View.GONE);}
     }
 

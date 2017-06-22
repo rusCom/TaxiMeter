@@ -278,7 +278,7 @@ public class MainApplication extends Application implements LocationListener {
 
         }
 
-        if (MainApplication.getInstance().getMenuItems().getDispatcherMessages())
+        if (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())
             mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_SEND_MESSAGE, "Отправить сообщение"));
         return mainActionItems;
     }

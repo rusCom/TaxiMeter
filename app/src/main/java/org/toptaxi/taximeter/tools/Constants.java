@@ -52,6 +52,7 @@ public class Constants {
     public static final int MENU_HIS_ORDERS             = 210;
     public static final int MENU_TEMPLATE_MESSAGE       = 211;
     public static final int MENU_FAQ                    = 212;
+    public static final int MENU_SHARE_CLIENT           = 213;
 
     public static final int MAIN_ACTION_GO_ONLINE       = 100;
     public static final int MAIN_ACTION_GO_OFFLINE      = 101;

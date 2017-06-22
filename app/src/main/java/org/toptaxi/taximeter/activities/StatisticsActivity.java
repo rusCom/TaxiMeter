@@ -44,7 +44,7 @@ public class StatisticsActivity extends AppCompatActivity {
         }
         else findViewById(R.id.tvStatisticsRating).setVisibility(View.GONE);
 
-        if (MainApplication.getInstance().getMainPreferences().shareDriver){
+        if (MainApplication.getInstance().getMainPreferences().getFriends()){
             tabSpec = tabHost.newTabSpec("statShare");
             tabSpec.setIndicator("Друзья");
             tabSpec.setContent(R.id.tvStatisticsShare);
