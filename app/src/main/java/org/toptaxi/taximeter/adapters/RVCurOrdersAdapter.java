@@ -3,6 +3,7 @@ package org.toptaxi.taximeter.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,10 @@ public class RVCurOrdersAdapter extends RecyclerView.Adapter<RVCurOrdersAdapter.
         switch (mOrderType){
             case 0:return MainApplication.getInstance().getCurOrders().getCount();
             case 1:return MainApplication.getInstance().getPriorOrders().getCount();
+            case 2:return MainApplication.getInstance().getCompleteOrders().getCount();
         }
         return MainApplication.getInstance().getCurOrders().getCount();
+
     }
 
     @Override
@@ -44,6 +47,7 @@ public class RVCurOrdersAdapter extends RecyclerView.Adapter<RVCurOrdersAdapter.
         switch (mOrderType){
             case 0:curOrder = MainApplication.getInstance().getCurOrders().getOrder(position);break;
             case 1:curOrder = MainApplication.getInstance().getPriorOrders().getOrder(position);break;
+            case 2:curOrder = MainApplication.getInstance().getCompleteOrders().getOrder(position);break;
         }
 
         if (curOrder != null) {

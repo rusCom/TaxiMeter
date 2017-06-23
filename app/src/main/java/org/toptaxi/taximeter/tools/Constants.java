@@ -61,6 +61,7 @@ public class Constants {
     public static final int MAIN_ACTION_PRIOR_ORDER     = 104;
     public static final int MAIN_ACTION_SEND_MESSAGE    = 105;
     public static final int MAIN_ACTION_PARKINGS        = 106;
+    public static final int MAIN_ACTION_ORDERS_COMPLETE = 107;
 
     public static final int DATABASE_VERSION            = 1;
 

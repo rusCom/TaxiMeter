@@ -8,8 +8,8 @@ android {
         applicationId "org.toptaxi.taximeter"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 21
-        versionName "0.21"
+        versionCode 22
+        versionName "0.22"
     }
     buildTypes {
         release {
@@ -21,12 +21,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
 
 
     compile('com.mikepenz:materialdrawer:5.3.2@aar') {
         transitive = true
     }
+
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:cardview-v7:25.3.1'
@@ -34,11 +35,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.0.1'
     compile 'com.google.android.gms:play-services-location:11.0.1'
     compile 'com.google.firebase:firebase-messaging:11.0.1'
-
-
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.mikepenz:iconics-core:2.6.0@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.6.0.1@aar'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    testCompile 'junit:junit:4.12'
 }
+
 
 apply plugin: 'com.google.gms.google-services'

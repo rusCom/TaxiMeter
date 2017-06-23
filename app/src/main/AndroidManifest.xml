@@ -67,7 +67,8 @@
             android:enabled="true" />
 
         <activity android:name=".activities.HisOrdersActivity" />
-        <activity android:name=".activities.HisOrderActivity"></activity>
+        <activity android:name=".activities.HisOrderActivity" />
+        <activity android:name=".activities.OrdersActivity"></activity>
     </application>
 
 </manifest>

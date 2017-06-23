@@ -37,16 +37,15 @@ import org.toptaxi.taximeter.data.Parkings;
 import org.toptaxi.taximeter.data.Preferences;
 import org.toptaxi.taximeter.services.MainService;
 import org.toptaxi.taximeter.tools.Constants;
+import org.toptaxi.taximeter.tools.OnCompleteOrdersChange;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
 import org.toptaxi.taximeter.tools.OnPriorOrdersChange;
 import org.toptaxi.taximeter.tools.PlacesAPI;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class MainApplication extends Application implements LocationListener {
     protected static String TAG = "#########" + MainApplication.class.getName();
@@ -56,15 +55,16 @@ public class MainApplication extends Application implements LocationListener {
     private Integer MainActivityCurView, curViewParkingID = 0;
     private OnMainDataChangeListener onMainDataChangeListener;
     private OnPriorOrdersChange onPriorOrdersChange;
+    private OnCompleteOrdersChange onCompleteOrdersChange;
     private Location mainLocation;
     private Account mainAccount;
     private Preferences mainPreferences;
     private DOT dot;
-    private Orders curOrders, priorOrders;
+    private Orders curOrders, priorOrders, completeOrders;
     private Parkings parkings;
     MainActivity mainActivity;
     private Messages mainMessages;
-    String curOrderData = "", priorOrderData = "";
+    String curOrderData = "", priorOrderData = "", completeOrdersData = "";
     Integer viewOrderID;
     private Order newOrder, curOrder;
     final Handler uiHandler = new Handler(Looper.getMainLooper());
@@ -172,6 +172,10 @@ public class MainApplication extends Application implements LocationListener {
         this.onPriorOrdersChange = onPriorOrdersChange;
     }
 
+    public void setOnCompleteOrdersChange(OnCompleteOrdersChange onCompleteOrdersChange) {
+        this.onCompleteOrdersChange = onCompleteOrdersChange;
+    }
+
     public Calendar getServerDate() {
         return ServerDate;
     }
@@ -182,12 +186,7 @@ public class MainApplication extends Application implements LocationListener {
         if (dataJSON.has("preferences")){getMainPreferences().setFromJSON(dataJSON.getJSONArray("preferences").getJSONObject(0));}
         if (dataJSON.has("orders")){getCurOrders().setFromJSON(dataJSON.getJSONArray("orders"));}
         if (dataJSON.has("prior_orders")){
-            //Log.d(TAG, "prior orders count = " + getPriorOrders().getCount());
-            //Log.d(TAG, "priorOrderData = " + dataJSON.getJSONArray("prior_orders").length());
             if (!priorOrderData.equals(dataJSON.getJSONArray("prior_orders").toString())){
-                //Log.d(TAG, "prior order data change");
-                //Log.d(TAG, "priorOrderData = " + priorOrderData);
-                //Log.d(TAG, "priorOrderData = " + dataJSON.getJSONArray("prior_orders").toString());
                 priorOrderData = dataJSON.getJSONArray("prior_orders").toString();
                 getPriorOrders().setFromJSONPrior(dataJSON.getJSONArray("prior_orders"));
                 if ((onPriorOrdersChange != null) && (getPriorOrders() != null)){
@@ -195,6 +194,22 @@ public class MainApplication extends Application implements LocationListener {
                         @Override
                         public void run() {
                             onPriorOrdersChange.OnPriorOrdersChange();
+                        }
+                    });
+                }
+
+            }
+        }
+        if (dataJSON.has("orders_complete")){
+            if (!completeOrdersData.equals(dataJSON.getJSONArray("orders_complete").toString())){
+                priorOrderData = dataJSON.getJSONArray("orders_complete").toString();
+                //Log.d(TAG, "priorOrderData " + priorOrderData);
+                getCompleteOrders().setFromJSONPrior(dataJSON.getJSONArray("orders_complete"));
+                if ((onCompleteOrdersChange != null) && (getCompleteOrders() != null)){
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onCompleteOrdersChange.OnCompleteOrdersChange();
                         }
                     });
                 }
@@ -218,9 +233,7 @@ public class MainApplication extends Application implements LocationListener {
                         }
                     });
                 curOrderData = dataJSON.getString("cur_order");
-
             }
-
         }
 
         if (dataJSON.has("date")){
@@ -271,12 +284,21 @@ public class MainApplication extends Application implements LocationListener {
         }
 
         // Если водитель на заказе и есть шаблоны сообщений, то показываем шаблоны
-        if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER) && (getMainPreferences().getTemplateMessages().size() > 0)){
+        if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER) && (getMainPreferences().getTemplateMessages().size() > 0) && (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())){
             for (int itemID = 0; itemID < getMainPreferences().getTemplateMessages().size(); itemID++){
                 mainActionItems.add(new MainActionItem(Constants.MENU_TEMPLATE_MESSAGE, getMainPreferences().getTemplateMessages().get(itemID)));
             }
 
         }
+
+        //Log.d(TAG, "getMainActions status = " + getMainAccount().getStatus() + "; action = " + getCurOrder().getMainAction() + "; menu = " + getMenuItems().getOrdersOnComplete());
+        // && (getCurOrder().getMainAction().equals("set_order_done"))
+        if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER)  && (getMenuItems().getOrdersOnComplete())){
+            mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_ORDERS_COMPLETE, "Заказы по выполнению"));
+        }
+
+
+
 
         if (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())
             mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_SEND_MESSAGE, "Отправить сообщение"));
@@ -323,6 +345,11 @@ public class MainApplication extends Application implements LocationListener {
     public Orders getPriorOrders() {
         if (priorOrders == null)priorOrders = new Orders();
         return priorOrders;
+    }
+
+    public Orders getCompleteOrders() {
+        if (completeOrders == null)completeOrders = new Orders();
+        return completeOrders;
     }
 
     public DOT getDot() {
