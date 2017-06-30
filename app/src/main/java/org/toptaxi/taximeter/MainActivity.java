@@ -55,6 +55,7 @@ import org.json.JSONObject;
 import org.toptaxi.taximeter.activities.BalanceActivity;
 import org.toptaxi.taximeter.activities.HisOrdersActivity;
 import org.toptaxi.taximeter.activities.MessagesActivity;
+import org.toptaxi.taximeter.activities.OrdersActivity;
 import org.toptaxi.taximeter.activities.ShareDriverActivity;
 import org.toptaxi.taximeter.activities.SplashActivity;
 import org.toptaxi.taximeter.activities.StatisticsActivity;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
     private static String TAG = "#########" + MainActivity.class.getName();
     FrameLayout viewCurOrders, viewTaximeter, viewViewOrder, viewCurOrder, viewGPSError, viewMainData, viewParkings;
     TextView tvGPSStatus, tvNullCurOrderInfo;
-    Button btnCurOrderMainAction, btnCurOrderAction;
+    Button btnCurOrderMainAction, btnCurOrderAction, btnCompleteOrders;
     private boolean isShowGPSData = false;
     protected Toolbar mToolbar;
     MenuItem miGPSFixed, miGPSNotFixed, miGPSOff, miDriverOffline, miDriverOnOrder, miDriverOnLine;
@@ -129,8 +130,10 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
         btnCurOrderMainAction   = (Button)findViewById(R.id.btnCurOrderMainAction);
         btnCurOrderAction       = (Button)findViewById(R.id.btnCurOrderAction);
+        btnCompleteOrders       = (Button)findViewById(R.id.btnCurOrderCompleteOrders);
 
 
+        btnCompleteOrders.setVisibility(View.GONE);
         tvGPSStatus = (TextView)findViewById(R.id.tvGPSInfo);
         tvNullCurOrderInfo = (TextView)findViewById(R.id.tvNullCurOrderInfo);
         tvNullCurOrderInfo.setVisibility(View.GONE);
@@ -221,6 +224,13 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapViewOrder);
         mapFragment.getMapAsync(this);
+
+        btnCompleteOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, OrdersActivity.class));
+            }
+        });
 
 
     }
@@ -820,6 +830,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
     private void generateCurOrder(){
         Order viewOrder = MainApplication.getInstance().getCurOrder();
         if (viewOrder.getState() != null){
+            btnCompleteOrders.setVisibility(View.GONE);
             //findViewById(R.id.llCurOrderTitleEx).setBackgroundResource(viewOrder.getCaptionColor());
             findViewById(R.id.btnOrderAction).setVisibility(View.GONE);
             viewOrder.fillCurOrderViewData(this);
@@ -895,6 +906,8 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                         });
                     break;
                 case "set_order_done":
+                    if (MainApplication.getInstance().getCompleteOrders().getCount() > 0)btnCompleteOrders.setVisibility(View.VISIBLE);
+                    else btnCompleteOrders.setVisibility(View.GONE);
                     btnCurOrderMainAction.setVisibility(View.VISIBLE);
                     btnCurOrderMainAction.setText("Выполнил");
                     btnCurOrderAction.setVisibility(View.GONE);

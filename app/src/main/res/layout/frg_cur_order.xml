@@ -24,6 +24,17 @@ android:layout_height="match_parent">
         android:layout_weight="2">
         <include layout="@layout/inc_cur_order_info"/>
     </ScrollView>
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ButtonRoundRed"
+            android:id="@+id/btnCurOrderCompleteOrders"
+
+            android:text="Заказы по выполнение"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -48,5 +59,7 @@ android:layout_height="match_parent">
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_weight="1" />
     </LinearLayout>
+
+
 
 </LinearLayout>

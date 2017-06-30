@@ -200,10 +200,12 @@ public class MainApplication extends Application implements LocationListener {
 
             }
         }
+        //Log.d(TAG, "parseData " + dataJSON.toString());
         if (dataJSON.has("orders_complete")){
+            //Log.d(TAG, "orders_complete = " + dataJSON.getJSONArray("orders_complete").toString());
             if (!completeOrdersData.equals(dataJSON.getJSONArray("orders_complete").toString())){
-                priorOrderData = dataJSON.getJSONArray("orders_complete").toString();
-                //Log.d(TAG, "priorOrderData " + priorOrderData);
+                completeOrdersData = dataJSON.getJSONArray("orders_complete").toString();
+                Log.d(TAG, "completeOrdersData = " + completeOrdersData);
                 getCompleteOrders().setFromJSONPrior(dataJSON.getJSONArray("orders_complete"));
                 if ((onCompleteOrdersChange != null) && (getCompleteOrders() != null)){
                     uiHandler.post(new Runnable() {
