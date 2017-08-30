@@ -1,6 +1,7 @@
 package org.toptaxi.taximeter.data;
 
 import org.toptaxi.taximeter.MainApplication;
+import org.toptaxi.taximeter.R;
 
 
 import java.io.IOException;
@@ -16,8 +17,8 @@ public class DOT2 {
 
     public DOT2() {
         httpClient = new OkHttpClient();
-        mainAddress = "192.168.1.32"; //MainApplication.getInstance().getResources().getString(R.string.mainIP);
-        reserveAddress = "192.168.1.34"; //MainApplication.getInstance().getResources().getString(R.string.reserveIP);
+        mainAddress = MainApplication.getInstance().getResources().getString(R.string.mainIP);
+        reserveAddress = MainApplication.getInstance().getResources().getString(R.string.reserveIP);
     }
 
     void setRestPort(String restPort) {
