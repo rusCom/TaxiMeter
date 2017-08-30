@@ -55,7 +55,7 @@ import org.json.JSONObject;
 import org.toptaxi.taximeter.activities.BalanceActivity;
 import org.toptaxi.taximeter.activities.HisOrdersActivity;
 import org.toptaxi.taximeter.activities.MessagesActivity;
-import org.toptaxi.taximeter.activities.OrdersActivity;
+import org.toptaxi.taximeter.activities.OrdersOnCompleteActivity;
 import org.toptaxi.taximeter.activities.ShareDriverActivity;
 import org.toptaxi.taximeter.activities.SplashActivity;
 import org.toptaxi.taximeter.activities.StatisticsActivity;
@@ -78,7 +78,6 @@ import org.toptaxi.taximeter.tools.FontFitTextView;
 import org.toptaxi.taximeter.tools.LockOrientation;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
 
-import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -228,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         btnCompleteOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, OrdersActivity.class));
+                startActivity(new Intent(MainActivity.this, OrdersOnCompleteActivity.class));
             }
         });
 
@@ -506,20 +505,9 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         else {
             viewMainData.setVisibility(View.VISIBLE);
             viewGPSError.setVisibility(View.GONE);
-            fabMainActions.setVisibility(View.VISIBLE);
+            //fabMainActions.setVisibility(View.VISIBLE);
             if (!MainApplication.getInstance().getCurPlaceName().equals(""))tvGPSStatus.setText(MainApplication.getInstance().getCurPlaceName());
             else tvGPSStatus.setText(MainApplication.getInstance().getLocationData());
-            /*
-            String Data = "["+ MainApplication.getInstance().getMainLocation().getLatitude() +", "+ MainApplication.getInstance().getMainLocation().getLongitude() +"]";
-            Data += "[" + MainApplication.getInstance().getMainLocation().getProvider() + ";" + MainApplication.getInstance().getMainLocation().getAccuracy() + "]";
-                    //+";" + MainApplication.getInstance().getMainLocation().getExtras().getInt("satellites") + "]";
-             */
-            /*
-            if (MainApplication.getInstance().getMainAccount().routePoint != null){
-                Data += " " + MainApplication.getInstance().getMainAccount().routePoint.getNameForFind();
-            }
-            */
-
         }
     }
 
@@ -893,6 +881,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                             MainApplication.getInstance().getDot().sendDataResult("set_driver_at_client", "");
                             }
                         });
+                    fabMainActions.setVisibility(View.VISIBLE);
                     break;
                 case "set_client_in_car":
                     btnCurOrderMainAction.setVisibility(View.VISIBLE);
@@ -904,6 +893,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                             MainApplication.getInstance().getDot().sendDataResult("set_client_in_car", "");
                             }
                         });
+                    fabMainActions.setVisibility(View.VISIBLE);
                     break;
                 case "set_order_done":
                     if (MainApplication.getInstance().getCompleteOrders().getCount() > 0)btnCompleteOrders.setVisibility(View.VISIBLE);
@@ -917,6 +907,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                             MainApplication.getInstance().getDot().sendDataResult("set_order_done", "");
                             }
                         });
+                    fabMainActions.setVisibility(View.GONE);
                     break;
             }
         }
@@ -1030,6 +1021,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 button.setTag(MainApplication.getInstance().getParkings().getItem(i).ID);
 
                 button.setId(MainApplication.getInstance().getParkings().getItem(i).ID * 1578);
+                /*
                 final int finalI = i;
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1039,6 +1031,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                         OnOrdersChange();
                     }
                 });
+                */
                 layout.addView(button);
             }
         setParkingButton();

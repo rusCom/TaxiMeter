@@ -26,20 +26,12 @@ android:layout_height="match_parent">
     </ScrollView>
 
 
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ButtonRoundRed"
-            android:id="@+id/btnCurOrderCompleteOrders"
-
-            android:text="Заказы по выполнение"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_weight="4">
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -58,6 +50,15 @@ android:layout_height="match_parent">
             style="@style/ButtonRoundRed"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_weight="1" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Заказы по выполнению"
+            android:id="@+id/btnCurOrderCompleteOrders"
+            style="@style/ButtonRoundYellow"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_weight="1"/>
     </LinearLayout>
 
 

@@ -3,7 +3,6 @@ package org.toptaxi.taximeter.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -12,7 +11,7 @@ import org.toptaxi.taximeter.MainActivity;
 import org.toptaxi.taximeter.MainApplication;
 import org.toptaxi.taximeter.R;
 import org.toptaxi.taximeter.activities.MessagesActivity;
-import org.toptaxi.taximeter.activities.OrdersActivity;
+import org.toptaxi.taximeter.activities.OrdersOnCompleteActivity;
 import org.toptaxi.taximeter.activities.PriorOrderActivity;
 import org.toptaxi.taximeter.data.MainActionItem;
 import org.toptaxi.taximeter.tools.Constants;
@@ -67,7 +66,7 @@ public class OnMainActionClickListener implements AdapterView.OnItemClickListene
                     MainApplication.getInstance().getDot().sendDataResult("message", textViewItem.getText().toString());
                     break;
                 case Constants.MAIN_ACTION_ORDERS_COMPLETE:
-                    MainApplication.getInstance().getMainActivity().startActivity(new Intent(MainApplication.getInstance().getMainActivity(), OrdersActivity.class));
+                    MainApplication.getInstance().getMainActivity().startActivity(new Intent(MainApplication.getInstance().getMainActivity(), OrdersOnCompleteActivity.class));
                     break;
 
             }

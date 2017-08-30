@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.toptaxi.taximeter.data.Account;
 import org.toptaxi.taximeter.data.DOT;
+import org.toptaxi.taximeter.data.DOT2;
 import org.toptaxi.taximeter.data.MainActionItem;
 import org.toptaxi.taximeter.data.MenuItems;
 import org.toptaxi.taximeter.data.Messages;
@@ -75,6 +76,7 @@ public class MainApplication extends Application implements LocationListener {
     private PlacesAPI mPlacesAPI;
     private String curPlaceName;
     private MenuItems menuItems;
+    private DOT2 dot2;
 
     @Override
     public void onCreate() {
@@ -202,12 +204,13 @@ public class MainApplication extends Application implements LocationListener {
         }
         //Log.d(TAG, "parseData " + dataJSON.toString());
         if (dataJSON.has("orders_complete")){
+            //Log.d(TAG, "orders_complete = " + dataJSON.getJSONArray("orders_complete").length());
             //Log.d(TAG, "orders_complete = " + dataJSON.getJSONArray("orders_complete").toString());
             if (!completeOrdersData.equals(dataJSON.getJSONArray("orders_complete").toString())){
                 completeOrdersData = dataJSON.getJSONArray("orders_complete").toString();
-                Log.d(TAG, "completeOrdersData = " + completeOrdersData);
+                //Log.d(TAG, "completeOrdersData = " + completeOrdersData);
                 getCompleteOrders().setFromJSONPrior(dataJSON.getJSONArray("orders_complete"));
-                if ((onCompleteOrdersChange != null) && (getCompleteOrders() != null)){
+                if ((onCompleteOrdersChange != null)){
                     uiHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -215,9 +218,16 @@ public class MainApplication extends Application implements LocationListener {
                         }
                     });
                 }
-
             }
+        } else if (onCompleteOrdersChange != null){
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    onCompleteOrdersChange.OnCompleteOrdersNull();
+                }
+            });
         }
+
         if (dataJSON.has("messages")){getMainMessages().OnNewMessages(dataJSON.getJSONArray("messages"));}
         if (dataJSON.has("hisMessages")){getMainMessages().setFromJSON(dataJSON.getJSONArray("hisMessages"));}
         if (dataJSON.has("parkingList")){getParkings().setFromJSON(dataJSON.getJSONArray("parkingList"));}
@@ -295,9 +305,7 @@ public class MainApplication extends Application implements LocationListener {
 
         //Log.d(TAG, "getMainActions status = " + getMainAccount().getStatus() + "; action = " + getCurOrder().getMainAction() + "; menu = " + getMenuItems().getOrdersOnComplete());
         // && (getCurOrder().getMainAction().equals("set_order_done"))
-        if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER)  && (getMenuItems().getOrdersOnComplete())){
-            mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_ORDERS_COMPLETE, "Заказы по выполнению"));
-        }
+
 
 
 
@@ -359,6 +367,13 @@ public class MainApplication extends Application implements LocationListener {
             dot = new DOT();
         }
         return dot;
+    }
+
+    public DOT2 getDot2() {
+        if (dot2 == null){
+            dot2 = new DOT2();
+        }
+        return dot2;
     }
 
     public Account getMainAccount() {

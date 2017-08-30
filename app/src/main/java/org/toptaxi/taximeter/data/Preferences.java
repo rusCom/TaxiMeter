@@ -14,16 +14,15 @@ import java.util.ArrayList;
 
 public class Preferences {
     protected static String TAG = "#########" + Preferences.class.getName();
-    private String balanceCaption;
-    public Boolean balanceView;
+
+
     private Integer dataTimer;
-    public String checkPriorErrorText = "";
-    public String agreementLink = "";
-    public ClientTariff taximeterTariff;
-    private Integer curTheme, screenOrientation, curVersion, agreementVersion = 0, placesTimeOut = 60;
+    private String checkPriorErrorText = "";
+    private String agreementLink = "";
+    private Integer curTheme, curVersion, agreementVersion = 0, placesTimeOut = 60;
     private Boolean checkCurVersion = false;
     private ArrayList<String> templateMessages;
-    private Boolean ActivateUnlim = false, ParkingButtons = false;
+    private Boolean ParkingButtons = false;
 
     private Boolean Friends = false, DispatcherMessages = false;
     private String FriendsCaption = "", FriendsText = "", DispatcherPhone = "", ClientsFriendsText = "", administrationCallPhone = "", faqLink = "";
@@ -45,7 +44,6 @@ public class Preferences {
 
     public void setFromJSON(JSONObject data) throws JSONException {
         if (data.has("cur_version"))curVersion = data.getInt("cur_version");
-        if (data.has("activate_unlim"))ActivateUnlim = data.getBoolean("activate_unlim");
         if (data.has("parkings_buttons"))ParkingButtons = data.getBoolean("parkings_buttons");
 
         if (data.has("template_messages")){
@@ -58,9 +56,7 @@ public class Preferences {
         }
 
         //Log.d(TAG, "onCreate data = " + data.toString());
-        taximeterTariff = new ClientTariff();
-        this.balanceCaption = data.getString("balance_caption");
-        this.balanceView = data.getBoolean("balance_view");
+        ClientTariff taximeterTariff = new ClientTariff();
         this.dataTimer = data.getInt("timer");
         this.administrationCallPhone = data.getString("administration_call_phone");
 
@@ -70,6 +66,7 @@ public class Preferences {
 
         if (data.has("send_data_port")){MainApplication.getInstance().getDot().setSendDataPort(data.getString("send_data_port"));}
         if (data.has("get_data_port")){MainApplication.getInstance().getDot().setGetDataPort(data.getString("get_data_port"));}
+        if (data.has("rest_port")){MainApplication.getInstance().getDot2().setRestPort(data.getString("rest_port"));}
 
         if (data.has("check_prior_error")){this.checkPriorErrorText = data.getString("check_prior_error");}
 
@@ -133,13 +130,11 @@ public class Preferences {
         return agreementLink;
     }
 
-    public Integer getAgreementVersion() {
+    Integer getAgreementVersion() {
         return agreementVersion;
     }
 
-    public Boolean getActivateUnlim() {
-        return ActivateUnlim;
-    }
+
 
     public Boolean getParkingButtons() {
         return ParkingButtons;
@@ -177,7 +172,7 @@ public class Preferences {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         SharedPreferences.Editor editor = sPref.edit();
         editor.putInt("curTheme", curTheme);
-        editor.commit();
+        editor.apply();
     }
 
     public int getTheme(){
@@ -201,13 +196,7 @@ public class Preferences {
 
 
 
-    public Integer getScreenOrientation() {
-        return screenOrientation;
-    }
 
-    public void setScreenOrientation(Integer screenOrientation) {
-        this.screenOrientation = screenOrientation;
-    }
 
     public Integer getDataTimer() {
         return dataTimer;

@@ -63,6 +63,14 @@
                 style="@style/ButtonRoundRed"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Заказы по выполнению"
+                android:id="@+id/btnCurOrderCompleteOrders"
+                style="@style/ButtonRoundYellow"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_weight="1"/>
 
         </LinearLayout>
 
