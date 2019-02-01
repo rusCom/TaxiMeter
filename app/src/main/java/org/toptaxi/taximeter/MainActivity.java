@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
     public AlertDialog mainActionsDialog, mainActionsUnlimDialog;
     GoogleMap googleMap;
     FontFitTextView tvCurOrderClientCost;
-    private String callIntentPhone;
+
 
     protected AccountHeader accountHeader;
     protected Drawer drawer;
@@ -182,7 +182,30 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                         builder.setTitle("Выберите действие");
                         builder.setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
+
                                 if (item == 0){
+                                    //Uri uri = Uri.parse("dgis://");
+                                    Uri uri = Uri.parse("dgis://2gis.ru/routeSearch/rsType/car/to/" + routePoint.getLongitude() + "," + routePoint.getLatitude());
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    List<ResolveInfo> activities = getPackageManager().queryIntentActivities(intent, 0);
+
+                                    boolean isIntentSafe = activities.size() > 0;
+
+                                    if (isIntentSafe) { //Если приложение установлено — запускаем его
+
+                                        startActivity(intent);
+
+                                    } else { // Если не установлено — переходим в Google Play.
+
+                                        intent = new Intent(Intent.ACTION_VIEW);
+
+                                        intent.setData(Uri.parse("market://details?id=ru.dublgis.dgismobile"));
+
+                                        startActivity(intent);
+
+                                    }
+
+                                    /*
                                     Intent intent = new Intent("ru.yandex.yandexnavi.action.BUILD_ROUTE_ON_MAP");
                                     intent.setPackage("ru.yandex.yandexnavi");
                                     PackageManager pm = getPackageManager();
@@ -198,7 +221,9 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                                     }
                                     // Запускаем нужную Activity
                                     startActivity(intent);
+                                    */
                                 }
+
                             }
                         });
                         AlertDialog alert = builder.create();
@@ -243,15 +268,6 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             }
             else init();
         }
-        if (requestCode == Constants.MY_PERMISSIONS_CALL_PHONE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                // permission was granted, yay! Do the
-                // contacts-related task you need to do.
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    callIntent(callIntentPhone);
-                }
-            }
-        }
 
     }
 
@@ -295,23 +311,9 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
     }
 
     public void callIntent(String phone){
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CALL_PHONE)){
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE},
-                        Constants.MY_PERMISSIONS_CALL_PHONE);
-                callIntentPhone = phone;
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE},
-                        Constants.MY_PERMISSIONS_CALL_PHONE);
-                callIntentPhone = phone;
-            }
-        }
-        else {
-            Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
-            dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(dialIntent);
-        }
+        Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+        dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(dialIntent);
     }
 
     @Override
@@ -685,12 +687,12 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         //drawer.addItem(new PrimaryDrawerItem().withName("Таксометр").withIcon(FontAwesome.Icon.faw_taxi).withSelectable(false).withIdentifier(Constants.MENU_TAXIMETER));
 
         if (MainApplication.getInstance().getMenuItems().getMessages()){
-            messagesItem = new PrimaryDrawerItem().withName("Сообщения").withIcon(FontAwesome.Icon.faw_commenting_o).withSelectable(false).withBadge(String.valueOf(MainApplication.getInstance().getMainAccount().getNotReadMessageCount())).withIdentifier(Constants.MENU_MESSAGES);
+            messagesItem = new PrimaryDrawerItem().withName("Сообщения диспетчеру").withIcon(FontAwesome.Icon.faw_commenting_o).withSelectable(false).withBadge(String.valueOf(MainApplication.getInstance().getMainAccount().getNotReadMessageCount())).withIdentifier(Constants.MENU_MESSAGES);
             drawer.addItem(messagesItem);
         }
 
 
-        drawer.addItem(new PrimaryDrawerItem().withName("Статистика").withIcon(FontAwesome.Icon.faw_cube).withSelectable(false).withIdentifier(Constants.MENU_STATISTICS));
+        drawer.addItem(new PrimaryDrawerItem().withName("Статистика|Рейтинг").withIcon(FontAwesome.Icon.faw_cube).withSelectable(false).withIdentifier(Constants.MENU_STATISTICS));
         if (MainApplication.getInstance().getMainPreferences().getFriends()){
             drawer.addItem(new PrimaryDrawerItem().withName("Пригласить друга").withIcon(FontAwesome.Icon.faw_share_alt).withSelectable(false).withIdentifier(Constants.MENU_SHARE_DRIVER));
         }
@@ -704,7 +706,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
         drawer.addItem(new DividerDrawerItem());
         if (!MainApplication.getInstance().getMainPreferences().getFaqLink().equals("")){
-            drawer.addItem(new PrimaryDrawerItem().withName("Это Важно").withIcon(FontAwesome.Icon.faw_question).withSelectable(false).withIdentifier(Constants.MENU_FAQ));
+            drawer.addItem(new PrimaryDrawerItem().withName("Как пополнить баланс").withIcon(FontAwesome.Icon.faw_question).withSelectable(false).withIdentifier(Constants.MENU_FAQ));
 
         }
 

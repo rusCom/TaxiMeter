@@ -1,24 +1,14 @@
 package org.toptaxi.taximeter.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.SmsMessage;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +21,6 @@ import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.LockOrientation;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String SMS_ACTION = "android.provider.Telephony.SMS_RECEIVED";
     private EditText edActivityLoginPhone, edActivityLoginPassword;
     private TextInputLayout ilActivityLoginPhone, ilActivityLoginPassword;
     private LinearLayout llActivityLoginProgress;
@@ -39,7 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnActivityLoginGetPassword;
     private SharedPreferences sharedPreferences;
     private boolean IsFirstGetPassword = true, SMSReceived = false;
-    private SMSReceive smsReceive;
     int Timer;
 
 
@@ -84,13 +72,6 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (smsReceive != null)unregisterReceiver(smsReceive);
-    }
-
-
     public void getToken(View view) {
         if (!validatePhone())return;
         if (!validatePassword())return;
@@ -124,21 +105,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void getPassword(View view) {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED){
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.RECEIVE_SMS)){
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.RECEIVE_SMS},
-                        Constants.MY_PERMISSIONS_RECEIVE_SMS);
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.RECEIVE_SMS},
-                        Constants.MY_PERMISSIONS_RECEIVE_SMS);
-            }
-        }
-        else startGetPasswordTask();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         startGetPasswordTask();
     }
 
@@ -151,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Подтверждение")
-                        .setMessage("Выслать смс повторно?")
+                        .setMessage("Позвонить повторно?")
                         .setPositiveButton("Да", new DialogInterface.OnClickListener()
                         {
                             @Override
@@ -179,14 +145,6 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
             if (result == Constants.DOT_REST_OK){
-                // если есть доступ  к чтению смс
-                if (ContextCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED){
-                    if (smsReceive == null){
-                        smsReceive = new SMSReceive();
-                        IntentFilter intentFilter = new IntentFilter(SMS_ACTION);
-                        registerReceiver(smsReceive, intentFilter);
-                    }
-                }
                 new TimerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 IsFirstGetPassword = false;
             }
@@ -255,37 +213,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private class SMSReceive extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null && intent.getAction() != null && SMS_ACTION.compareToIgnoreCase(intent.getAction()) == 0) {
-                Bundle myBundle = intent.getExtras();
-
-                Object[] pduArray = (Object[]) intent.getExtras().get("pdus");
-                assert pduArray != null;
-                SmsMessage[] messages = new SmsMessage[pduArray.length];
-                for (int i = 0; i < pduArray.length; i++) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        String format = myBundle.getString("format");
-                        messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i], format);
-                    } else {
-                        messages[i] = SmsMessage.createFromPdu((byte[]) pduArray[i]);
-                    }
-                }
-                StringBuilder bodyText = new StringBuilder();
-                for (SmsMessage message : messages) {
-                    bodyText.append(message.getMessageBody());
-                }
-                String body = bodyText.toString();
-                if (body.charAt(0) == ':'){
-                    SMSReceived = true;
-                    String pass = body.substring(1, 5);
-                    edActivityLoginPassword.setText(pass);
-                    getToken(null);
-                }
-            }
-
-        }
-    }
 }

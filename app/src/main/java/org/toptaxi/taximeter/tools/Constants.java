@@ -1,12 +1,5 @@
 package org.toptaxi.taximeter.tools;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-
-import org.toptaxi.taximeter.R;
-
 import java.text.DecimalFormat;
 
 public class Constants {
@@ -70,10 +63,7 @@ public class Constants {
     public static final int ORDER_VIEW_CUR_ORDER        = 3;
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 101;
-    public static final int MY_PERMISSIONS_RECEIVE_SMS      = 102;
-    public static final int MY_PERMISSIONS_CALL_PHONE       = 103;
-    public static final int MY_PERMISSIONS_READ_CONTACTS    = 104;
-    public static final int MY_PERMISSIONS_SEND_SMS         = 105;
+
 
     public static final int ROUTE_POINT_TYPE_UNKNOWN        = 0;
     public static final int ROUTE_POINT_TYPE_STREET         = 1;

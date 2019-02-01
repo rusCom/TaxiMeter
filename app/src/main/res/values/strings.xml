@@ -27,12 +27,12 @@
     <string name="btnCancel">Отмена</string>
     <!-- ActivityLogin -->
     <string name="edActivityLoginPhone">Номер телефона</string>
-    <string name="edActivityLoginPassword">Код из СМС</string>
+    <string name="edActivityLoginPassword">Код для входа</string>
     <string name="btnActivityLoginGetToken">Вход</string>
     <string name="btnActivityLoginGetPassword">Получить код</string>
     <string name="errorPhoneNotEntered">Не введен номер телефона</string>>
-    <string name="errorPasswordNotEntered">Не введен код из СМС</string>>
-    <string name="smsWait">Ожидаем СМС. Повторный запрос доступен через</string>>
+    <string name="errorPasswordNotEntered">Не введен код из Звонка</string>>
+    <string name="smsWait">Ожидаем Звонок от робота. Повторный запрос доступен через</string>>
     <!-- TaximeterFragment -->
     <string name="tvTaximeterTimeCaption">Время заказа, мин</string>
     <string name="tvTaximeterDistanceCaption">Пробег GPS, км</string>

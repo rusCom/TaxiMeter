@@ -132,11 +132,7 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
                     String notificationMessage = MainApplication.getInstance().getMainAccount().getBalance() + " " + MainApplication.getInstance().getMainAccount().getStatusName() + " " + MainApplication.getInstance().getMainAccount().getName();
                     sendNotification(notificationMessage);
 
-                    calcTimer += MainApplication.getInstance().getMainPreferences().getDataTimer();
-                    if (calcTimer >= 60){
-                        calcTimer = 0;
-                        calcBaseDistance();
-                    }
+
                     placesTimer += MainApplication.getInstance().getMainPreferences().getDataTimer();
                     if (placesTimer >= MainApplication.getInstance().getMainPreferences().getPlacesTimeOut()){
                         placesTimer = 0;
@@ -159,25 +155,7 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
         }).start();
     }
 
-    public void calcBaseDistance(){
 
-        try {
-            //Log.d(TAG, "calcBaseDistance start");
-            JSONObject calcData = new JSONObject(MainApplication.getInstance().getDot().getDataType("getDistanceForGoogleSearch", ""));
-            //Log.d(TAG, "getDistanceForGoogleSearch calcData = " + calcData.toString());
-            String httpRequest = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+calcData.getString("bLatitude")+","+calcData.getString("bLongitude")+"&destinations="+calcData.getString("eLatitude")+","+calcData.getString("eLongitude");
-            JSONObject response = new JSONObject(DOT.httpGet(httpRequest));
-            //Log.d(TAG, "getDistanceForGoogleSearch response = " + response.toString());
-            JSONObject location = response.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0);
-            String distance = location.getJSONObject("distance").getString("value");
-            httpRequest = calcData.getString("bLatitude")+"|"+calcData.getString("bLongitude")+"|"+calcData.getString("eLatitude")+"|"+calcData.getString("eLongitude")+"|"+distance+"|";
-            //Log.d(TAG, "getDistanceForGoogleSearch httpRequest = " + httpRequest);
-            MainApplication.getInstance().getDot().sendData("setDistanceForGoogleSearch", httpRequest);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public IBinder onBind(Intent intent) {

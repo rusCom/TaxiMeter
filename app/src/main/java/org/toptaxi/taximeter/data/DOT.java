@@ -208,10 +208,7 @@ public class DOT {
         String URL = getGetDataRest() + "gettype=" + AppToken + "&token=" + MainApplication.getInstance().getMainAccount().getToken() + "&type=" + Type;
         //Log.d(TAG, "getDataParseTask URl = " + URL);
         GetDataParseTypeTask sendDataTask = new GetDataParseTypeTask();
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
-            sendDataTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, URL);
-        else
-            sendDataTask.execute(URL);
+        sendDataTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, URL);
     }
 
     private void getDataTask(){
