@@ -62,6 +62,7 @@ public class DOT {
     }
 
     public int sendDataResponse(String type, String data){
+
         int result = Constants.DOT_HTTP_ERROR;
         try {
             String URL = getSendDataRest() + "send=" + AppToken + "&token=" + MainApplication.getInstance().getMainAccount().getToken();
@@ -85,6 +86,7 @@ public class DOT {
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
+        //Log.d(TAG, "")
         return result;
     }
 

@@ -2,16 +2,20 @@ package org.toptaxi.taximeter.services;
 
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -64,7 +68,8 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
 
         if( m_wakeLock == null )
         {
-            m_wakeLock = m_powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Keep background services running");
+            m_wakeLock = m_powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    "MyApp::MyWakelockTag");
             m_wakeLock.acquire();
         }
         if (MainApplication.getInstance().getGoogleApiClient() == null){
@@ -88,6 +93,39 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
 
         PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String NOTIFICATION_CHANNEL_ID = "aTaxi.Taximetr";
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_HIGH);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        notificationBuilder.setContentIntent(contentIntent)
+                .setOngoing(true)   //Can't be swiped out
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(MainApplication.getInstance().getResources().getString(R.string.app_name)) //Заголовок
+                .setContentText(Text) // Текст уведомления
+                .setWhen(System.currentTimeMillis())
+                .setOnlyAlertOnce(true) ;
+
+        Notification notification;
+        notification = notificationBuilder.build();
+        startForeground(DEFAULT_NOTIFICATION_ID, notification);
+
+
+        /*
+
+
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(contentIntent)
                 .setOngoing(true)   //Can't be swiped out
@@ -97,13 +135,34 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
                 .setWhen(System.currentTimeMillis());
 
         Notification notification;
-        if (android.os.Build.VERSION.SDK_INT<=15) {
-            notification = builder.getNotification(); // API-15 and lower
-        }else{
-            notification = builder.build();
-        }
-
+        notification = builder.build();
         startForeground(DEFAULT_NOTIFICATION_ID, notification);
+        */
+
+        /*
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {//startMyOwnForeground();
+             }
+        else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            builder.setContentIntent(contentIntent)
+                    .setOngoing(true)   //Can't be swiped out
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(MainApplication.getInstance().getResources().getString(R.string.app_name)) //Заголовок
+                    .setContentText(Text) // Текст уведомления
+                    .setWhen(System.currentTimeMillis());
+
+            Notification notification;
+            notification = builder.build();
+            startForeground(DEFAULT_NOTIFICATION_ID, notification);
+
+        }
+        */
+
+
+
+
     }
 
     @Override
