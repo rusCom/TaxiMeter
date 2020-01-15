@@ -241,6 +241,7 @@ public class MainApplication extends Application implements LocationListener {
     }
 
     public void parseData(JSONObject dataJSON) throws JSONException{
+        
         if (dataJSON.has("requestUID")){lastRequestUID = dataJSON.getInt("requestUID");}
         if (dataJSON.has("account")){getMainAccount().setFromJSON(dataJSON.getJSONArray("account").getJSONObject(0));}
         if (dataJSON.has("preferences")){getMainPreferences().setFromJSON(dataJSON.getJSONArray("preferences").getJSONObject(0));}
