@@ -1,5 +1,6 @@
 package org.toptaxi.taximeter;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
@@ -12,18 +13,27 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.toptaxi.taximeter.data.Account;
@@ -36,7 +46,9 @@ import org.toptaxi.taximeter.data.Order;
 import org.toptaxi.taximeter.data.Orders;
 import org.toptaxi.taximeter.data.Parkings;
 import org.toptaxi.taximeter.data.Preferences;
+import org.toptaxi.taximeter.services.FirebaseService;
 import org.toptaxi.taximeter.services.MainService;
+import org.toptaxi.taximeter.services.RestService;
 import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.OnCompleteOrdersChange;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
@@ -47,12 +59,16 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class MainApplication extends Application implements LocationListener {
     protected static String TAG = "#########" + MainApplication.class.getName();
     protected static MainApplication mainApplication;
 
-    public static MainApplication getInstance(){return mainApplication;}
+    public static MainApplication getInstance() {
+        return mainApplication;
+    }
+
     private Integer MainActivityCurView, curViewParkingID = 0;
     private OnMainDataChangeListener onMainDataChangeListener;
     private OnPriorOrdersChange onPriorOrdersChange;
@@ -77,19 +93,21 @@ public class MainApplication extends Application implements LocationListener {
     private String curPlaceName;
     private MenuItems menuItems;
     private DOT2 dot2;
+    private String deviceID;
+    private RestService restService;
+    private FirebaseService firebaseService;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mainApplication = this;
         MainActivityCurView = Constants.CUR_VIEW_CUR_ORDERS;
-        getDot().sendData("GCMToken", FirebaseInstanceId.getInstance().getToken());
-        Log.d(TAG, "onCreate fbToken = " + FirebaseInstanceId.getInstance().getToken());
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         ServerDate = Calendar.getInstance();
         curPlaceName = "";
+        // getFirebaseInstanceToken();
     }
 
     @Override
@@ -105,12 +123,52 @@ public class MainApplication extends Application implements LocationListener {
         Log.d(TAG, "setGoogleApiClient");
         this.mGoogleApiClient = mGoogleApiClient;
         //LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //mainLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         getPlacesAPI().setGoogleApiClient(this.mGoogleApiClient);
 
+    }
+
+    public FirebaseService getFirebaseService() {
+        if (firebaseService == null){
+            firebaseService = new FirebaseService();
+        }
+        return firebaseService;
+    }
+
+    void getFirebaseInstanceToken(){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = Objects.requireNonNull(task.getResult()).getToken();
+                        getRestService().httpGetThread("/profile/push?push_token=" + token);
+                        FirebaseMessaging.getInstance().subscribeToTopic("allDevices");
+
+                    }
+                });
+    }
+
+    public RestService getRestService() {
+        if (restService == null){
+            restService = new RestService();
+        }
+        return restService;
+    }
+
+    public String getDeviceID() {
+        if (deviceID == null) {
+            deviceID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
+        return deviceID;
     }
 
     public MenuItems getMenuItems() {
@@ -518,6 +576,19 @@ public class MainApplication extends Application implements LocationListener {
         } else {
             return Html.fromHtml(source);
         }
+    }
+
+    public static boolean isJSONArrayHaveValue(JSONArray jsonArray, String value){
+        for (int itemID = 0; itemID < jsonArray.length(); itemID++){
+            try {
+                if (jsonArray.getString(itemID).equals(value)){
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
 }

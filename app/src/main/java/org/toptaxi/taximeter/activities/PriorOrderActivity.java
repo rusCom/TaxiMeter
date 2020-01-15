@@ -1,13 +1,14 @@
 package org.toptaxi.taximeter.activities;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.toptaxi.taximeter.MainApplication;
 import org.toptaxi.taximeter.R;
@@ -57,6 +58,9 @@ public class PriorOrderActivity extends AppCompatActivity implements RecyclerIte
         final Order curOrder = MainApplication.getInstance().getPriorOrders().getOrder(position);
         if (curOrder != null){
             String alertText = "Принять предварительный заказ " + curOrder.getPriorInfo() + " по маршруту " + curOrder.getRoute();
+            if (!curOrder.getNote().equals("")){
+                alertText += "(" + curOrder.getNote() + ")";
+            }
             Log.d(TAG, alertText);
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Внимание");

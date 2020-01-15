@@ -1,12 +1,13 @@
 package org.toptaxi.taximeter.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.toptaxi.taximeter.R;
 import org.toptaxi.taximeter.adapters.HisOrdersAdapters;

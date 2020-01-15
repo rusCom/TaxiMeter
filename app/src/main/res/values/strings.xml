@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">aTaxi.Таксометр</string>
+    <string name="app_name">aTaxi.Водитель</string>
 
     <string name="onCloseDriverOnOrder">Вы на заказе. Не надо закрывать программу</string>
     <string name="onCloseTaximeterStart">Сначала закройте таксометр</string>

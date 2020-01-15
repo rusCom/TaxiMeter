@@ -1,20 +1,35 @@
 package org.toptaxi.taximeter.services;
 
+import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
+import androidx.annotation.NonNull;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.toptaxi.taximeter.MainApplication;
 
 public class MainFirebaseMessagingService extends FirebaseMessagingService {
-    protected static String TAG = "#########" + MainFirebaseMessagingService.class.getName();
+    private static String TAG = "#########" + MainFirebaseMessagingService.class.getName();
+
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage){
-        //Log.d(TAG, "onMessageReceived " + remoteMessage.getData().get("Destenation"));
-        //Log.d(TAG, "onMessageReceived " + FirebaseInstanceId.getInstance().getToken());
-        if (remoteMessage.getData().get("Destenation").equals(FirebaseInstanceId.getInstance().getToken())){
-            MainApplication.getInstance().getDot().getDataParseTask("messages");
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        Log.d(TAG, "onMessageReceived " + remoteMessage.getFrom());
+
+        if (remoteMessage.getData().size() > 0){
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
+
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+
     }
+
+    @Override
+    public void onNewToken(@NonNull String token) {
+        MainApplication.getInstance().getFirebaseService().setPushToken(token);
+        // MainApplication.getInstance().getDotService().sendRegistrationToServer(token);
+    }
+
 }

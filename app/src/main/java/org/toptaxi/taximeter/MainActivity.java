@@ -1,5 +1,6 @@
 package org.toptaxi.taximeter;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,16 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,12 +23,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         tvNullCurOrderInfo = (TextView)findViewById(R.id.tvNullCurOrderInfo);
         tvNullCurOrderInfo.setVisibility(View.GONE);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
         fabMainActions = (FloatingActionButton) findViewById(R.id.fabMainActions);
@@ -205,23 +206,6 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
                                     }
 
-                                    /*
-                                    Intent intent = new Intent("ru.yandex.yandexnavi.action.BUILD_ROUTE_ON_MAP");
-                                    intent.setPackage("ru.yandex.yandexnavi");
-                                    PackageManager pm = getPackageManager();
-                                    List<ResolveInfo> infos = pm.queryIntentActivities(intent, 0);
-                                    // Проверяем, установлен ли Яндекс.Навигатор
-                                    if (infos == null || infos.size() == 0) {
-                                        // Если нет - будем открывать страничку Навигатора в Google Play
-                                        intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setData(Uri.parse("market://details?id=ru.yandex.yandexnavi"));
-                                    } else {
-                                        intent.putExtra("lat_to", routePoint.getLatitude());
-                                        intent.putExtra("lon_to", routePoint.getLongitude());
-                                    }
-                                    // Запускаем нужную Activity
-                                    startActivity(intent);
-                                    */
                                 }
 
                             }
@@ -303,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             OnMainLocationChange();
         }
         else {
-            //Log.d(TAG, "startSplashActivity");
+            Log.d(TAG, "startSplashActivity");
             Intent splashIntent = new Intent(MainActivity.this, SplashActivity.class);
             startActivityForResult(splashIntent, Constants.ACTIVITY_SPLASH);
         }
@@ -646,10 +630,12 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
     }
 
     public void generateDrawer(){
+
         profile = new ProfileDrawerItem()
                 .withName(MainApplication.getInstance().getMainAccount().getName())
                 .withEmail(MainApplication.getInstance().getMainAccount().getSerName())
-                .withIcon(ContextCompat.getDrawable(this, R.mipmap.contact_default));
+                .withIcon(getResources().getDrawable(R.mipmap.contact_default));
+                //.withIcon(ContextCompat.getDrawable(this, R.mipmap.contact_default));
 
         accountHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -668,6 +654,8 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                     }
                 })
                 .build();
+
+
         drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(mToolbar)
@@ -854,15 +842,13 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
                     if (viewOrder.IsDenyPenalty()){
                         Log.d(TAG, "view cur order with penalty");
-                        if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)btnCurOrderAction.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.btn_red));
-                        else btnCurOrderAction.setBackgroundResource(R.drawable.btn_red);
+                        btnCurOrderAction.setBackgroundResource(R.drawable.btn_red);
                         btnCurOrderAction.setText(viewOrder.getDenyButtonCaption());
                         //Log.d(TAG, "viewOrder.getDenyButtonCaption() = " + viewOrder.getDenyButtonCaption());
                     }
                     else {
                         Log.d(TAG, "view cur order without penalty");
-                        if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)btnCurOrderAction.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.btn_yellow));
-                        else btnCurOrderAction.setBackgroundResource(R.drawable.btn_yellow);
+                        btnCurOrderAction.setBackgroundResource(R.drawable.btn_yellow);
                     }
 
                     btnCurOrderAction.setOnClickListener(new View.OnClickListener() {

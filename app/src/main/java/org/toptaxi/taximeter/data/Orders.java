@@ -94,7 +94,7 @@ public class Orders {
                     }
                 });
             }
-            if ((IsHaveNewOrder()) & ((MainApplication.getInstance().getMainAccount().getStatus() != 2)))mp.start();
+            // if ((IsHaveNewOrder()) & ((MainApplication.getInstance().getMainAccount().getStatus() != 2)))mp.start();
 
 
     }

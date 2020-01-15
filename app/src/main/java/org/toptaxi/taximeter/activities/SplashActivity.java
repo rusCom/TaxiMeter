@@ -1,6 +1,6 @@
 package org.toptaxi.taximeter.activities;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,18 +10,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -45,7 +43,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         new LockOrientation(this).lock();
         setContentView(R.layout.activity_splash);
 
-        tvAction  = (TextView)findViewById(R.id.tvSplashAction);
+        tvAction  = findViewById(R.id.tvSplashAction);
         ((TextView)findViewById(R.id.tvSplashVersion)).setText(MainApplication.getInstance().getVersionName());
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
 
@@ -107,6 +105,15 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void init(){
+        Log.d(TAG, "init");
+        /*
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+         */
         // Есть ли учетные данные по клиенту
         if (MainApplication.getInstance().getMainAccount().getToken().equals("")){
             Intent loginIntent = new Intent(SplashActivity.this, LoginActivity.class);

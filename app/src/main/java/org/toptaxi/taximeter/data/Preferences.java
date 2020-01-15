@@ -2,8 +2,9 @@ package org.toptaxi.taximeter.data;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatDelegate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,6 +89,8 @@ public class Preferences {
             if (d.has("messages"))this.DispatcherMessages = d.getBoolean("messages");
         }
         if (data.has("client_friends_text"))this.ClientsFriendsText = data.getString("client_friends_text");
+
+        if (data.has("topics")){MainApplication.getInstance().getFirebaseService().CheckTopics(data.getJSONArray("topics"));}
     }
 
     public String getAdministrationCallPhone() {

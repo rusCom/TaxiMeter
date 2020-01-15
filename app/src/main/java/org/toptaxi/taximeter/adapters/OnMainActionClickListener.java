@@ -1,8 +1,8 @@
 package org.toptaxi.taximeter.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;

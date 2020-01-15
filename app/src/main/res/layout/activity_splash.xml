@@ -15,8 +15,9 @@
         android:id="@+id/ivSplashLogo"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/splash"
+        android:src="@mipmap/logo"
         android:layout_margin="@dimen/activity_margin"
+        android:padding="100dp"
         android:contentDescription="@string/app_name" />
 
     <ProgressBar
@@ -25,7 +26,8 @@
         android:id="@+id/pbSplash"
         android:layout_alignBottom="@+id/ivSplashLogo"
         android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/activity_margin" />
+        android:layout_margin="@dimen/activity_margin"
+        android:padding="40dp"/>
 
     <TextView
         android:layout_width="wrap_content"
