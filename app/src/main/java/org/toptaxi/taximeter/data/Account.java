@@ -148,7 +148,7 @@ public class Account {
         return result;
     }
 
-    void setToken(String token) {
+    public void setToken(String token) {
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString("accountToken", token);

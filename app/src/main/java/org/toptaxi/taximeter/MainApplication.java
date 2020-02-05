@@ -1,6 +1,5 @@
 package org.toptaxi.taximeter;
 
-import android.Manifest;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -53,7 +51,6 @@ import org.toptaxi.taximeter.tools.Constants;
 import org.toptaxi.taximeter.tools.OnCompleteOrdersChange;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
 import org.toptaxi.taximeter.tools.OnPriorOrdersChange;
-import org.toptaxi.taximeter.tools.PlacesAPI;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -89,13 +86,12 @@ public class MainApplication extends Application implements LocationListener {
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Calendar ServerDate;
-    private PlacesAPI mPlacesAPI;
-    private String curPlaceName;
     private MenuItems menuItems;
     private DOT2 dot2;
     private String deviceID;
     private RestService restService;
     private FirebaseService firebaseService;
+    private String curLocationName = "";
 
     @Override
     public void onCreate() {
@@ -106,7 +102,7 @@ public class MainApplication extends Application implements LocationListener {
         mLocationRequest.setInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         ServerDate = Calendar.getInstance();
-        curPlaceName = "";
+
         // getFirebaseInstanceToken();
     }
 
@@ -127,7 +123,6 @@ public class MainApplication extends Application implements LocationListener {
             //mainLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
-        getPlacesAPI().setGoogleApiClient(this.mGoogleApiClient);
 
     }
 
@@ -176,17 +171,15 @@ public class MainApplication extends Application implements LocationListener {
         return menuItems;
     }
 
-    public PlacesAPI getPlacesAPI() {
-        if (mPlacesAPI == null){mPlacesAPI = new PlacesAPI();}
-        return mPlacesAPI;
+    public String getCurLocationName() {
+        if (curLocationName.equals("")){
+            return  getMainLocation().toString();
+        }
+        return curLocationName;
     }
 
-    public String getCurPlaceName() {
-        return curPlaceName;
-    }
-
-    public void setCurPlaceName(String curPlaceName) {
-        this.curPlaceName = curPlaceName;
+    public void setCurLocationName(String curLocationName) {
+        this.curLocationName = curLocationName;
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -241,7 +234,7 @@ public class MainApplication extends Application implements LocationListener {
     }
 
     public void parseData(JSONObject dataJSON) throws JSONException{
-        
+
         if (dataJSON.has("requestUID")){lastRequestUID = dataJSON.getInt("requestUID");}
         if (dataJSON.has("account")){getMainAccount().setFromJSON(dataJSON.getJSONArray("account").getJSONObject(0));}
         if (dataJSON.has("preferences")){getMainPreferences().setFromJSON(dataJSON.getJSONArray("preferences").getJSONObject(0));}

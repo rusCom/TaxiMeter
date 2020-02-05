@@ -29,6 +29,7 @@ import org.toptaxi.taximeter.MainActivity;
 import org.toptaxi.taximeter.MainApplication;
 import org.toptaxi.taximeter.R;
 import org.toptaxi.taximeter.data.DOT;
+import org.toptaxi.taximeter.tools.MainUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -61,18 +62,16 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
         isRunning = true;
         sendNotification("");
         getDataTask();
-        if( m_powerManager == null )
-        {
-            m_powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        if (m_powerManager == null) {
+            m_powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         }
 
-        if( m_wakeLock == null )
-        {
+        if (m_wakeLock == null) {
             m_wakeLock = m_powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     "MyApp::MyWakelockTag");
             m_wakeLock.acquire();
         }
-        if (MainApplication.getInstance().getGoogleApiClient() == null){
+        if (MainApplication.getInstance().getGoogleApiClient() == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -115,7 +114,7 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
                 .setContentTitle(MainApplication.getInstance().getResources().getString(R.string.app_name)) //Заголовок
                 .setContentText(Text) // Текст уведомления
                 .setWhen(System.currentTimeMillis())
-                .setOnlyAlertOnce(true) ;
+                .setOnlyAlertOnce(true);
 
         Notification notification;
         notification = notificationBuilder.build();
@@ -161,8 +160,6 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
         */
 
 
-
-
     }
 
     @Override
@@ -170,22 +167,22 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
         isRunning = false;
         MainApplication.getInstance().getMainAccount().setNullStatus();
         MainApplication.getInstance().getDot().sendData("driver_off_line", "");
-        if( m_wakeLock != null )
-        {
+        if (m_wakeLock != null) {
             m_wakeLock.release();
             m_wakeLock = null;
         }
         Log.d(TAG, "OnDestroy service");
     }
 
-    void getDataTask(){
+    void getDataTask() {
         new Thread(new Runnable() {
             public void run() {
 
                 Integer calcTimer = 0,
                         placesTimer = MainApplication.getInstance().getMainPreferences().getPlacesTimeOut();
+                Double lastLongitude = 0.0, lastLatitude = 0.0;
 
-                while (isRunning){
+                while (isRunning) {
 
                     MainApplication.getInstance().getDot().getData();
                     String notificationMessage = MainApplication.getInstance().getMainAccount().getBalance() + " " + MainApplication.getInstance().getMainAccount().getStatusName() + " " + MainApplication.getInstance().getMainAccount().getName();
@@ -193,9 +190,27 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
 
 
                     placesTimer += MainApplication.getInstance().getMainPreferences().getDataTimer();
-                    if (placesTimer >= MainApplication.getInstance().getMainPreferences().getPlacesTimeOut()){
+                    if (placesTimer >= MainApplication.getInstance().getMainPreferences().getPlacesTimeOut()) {
                         placesTimer = 0;
-                        MainApplication.getInstance().getPlacesAPI().getCurPlace();
+                        try {
+                            if (MainApplication.getInstance().getMainLocation() != null){
+                                if (!lastLatitude.equals(MainUtils.round(MainApplication.getInstance().getMainLocation().getLatitude(), 6))
+                                        & !lastLongitude.equals(MainUtils.round(MainApplication.getInstance().getMainLocation().getLongitude(), 6))
+                                ) {
+                                    lastLatitude = MainUtils.round(MainApplication.getInstance().getMainLocation().getLatitude(), 6);
+                                    lastLongitude = MainUtils.round(MainApplication.getInstance().getMainLocation().getLongitude(), 6);
+                                    // MainApplication.getInstance().getPlacesAPI().getCurPlace();
+                                    String url = "http://api.toptaxi.org/geo/geocode?lt=" + lastLatitude + "&ln=" + lastLongitude;
+                                    // Log.d(TAG, "CurLocationName url = " + url);
+                                    JSONObject data = MainApplication.getInstance().getRestService().httpGetAny(url);
+                                    JSONObject result = data.getJSONObject("result");
+                                    MainApplication.getInstance().setCurLocationName(result.getString("name") + " (" + result.getString("dsc") + ")");
+                                    // Log.d(TAG, "CurLocationName = " + result.toString());
+                                }
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
 
                     try {
@@ -213,7 +228,6 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
             }
         }).start();
     }
-
 
 
     @Override

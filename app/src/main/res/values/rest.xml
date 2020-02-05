@@ -4,5 +4,6 @@
     <string name="reserveIP">api2.toptaxi.org</string>
     <string name="loginPort">7579</string>
     <string name="mainRestHost">http://api1.toptaxi.org:5874</string>
+    <!-- <string name="mainRestHost">http://192.168.1.199:5874</string> -->
     <string name="reserveRestHost">http://api2.toptaxi.org:5874</string>
 </resources>

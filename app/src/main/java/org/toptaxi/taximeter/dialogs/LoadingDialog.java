@@ -2,19 +2,16 @@ package org.toptaxi.taximeter.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Build;
 
 import org.toptaxi.taximeter.R;
 
 public class LoadingDialog {
-    AlertDialog dialog;
+    private AlertDialog dialog;
 
-    protected LoadingDialog(Context context) {
+    public LoadingDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setView(R.layout.layout_loading_dialog);
-        }
+        builder.setView(R.layout.dialog_loading);
         dialog = builder.create();
     }
 

@@ -20,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RestService {
-    protected static String TAG = "#########" + RestService.class.getName();
+    protected static String TAG = "###" + RestService.class.getName();
     private OkHttpClient httpClient;
     private JSONObject header;
     private ArrayList<String> restHost;
@@ -51,6 +51,13 @@ public class RestService {
                 e.printStackTrace();
             }
         }
+
+        try {
+            header.put("version", MainApplication.getInstance().getVersionCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             return Base64.getEncoder().encodeToString(header.toString().getBytes());
         }
@@ -69,14 +76,15 @@ public class RestService {
     }
 
     public JSONObject httpGet(String path){
-        return httpGetHost(path);
+        JSONObject response = httpGetHost(path);
+        Log.d(TAG, "httpGet path = '" + path + "'; response = '" + (response != null ? response.toString() : null) + "'");
+        return response;
     }
 
 
 
     private JSONObject httpGetHost(String path){
         String url = restHost.get(restIndex) + path;
-        Log.v(TAG, "httpGetHost " + url);
         Response response = restCall(url);
 
         if (response == null){
@@ -115,6 +123,26 @@ public class RestService {
             e.printStackTrace();
         }
         return response;
+    }
+
+    JSONObject httpGetAny(String url){
+        try {
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("authorization", "Bearer " + getHeader())
+                    .build();
+            Response response = httpClient.newCall(request).execute();
+            if (response.code() != 200){return null;}
+            try {
+                return new JSONObject(Objects.requireNonNull(response.body()).string());
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

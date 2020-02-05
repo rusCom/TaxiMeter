@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:ems="10"
+                android:importantForAutofill="no"
                 android:hint="@string/edActivityLoginPhone" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -44,10 +45,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/edActivityLoginPassword"
+                android:id="@+id/edActivityLoginCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="4"
+                android:importantForAutofill="no"
                 android:inputType="numberDecimal"
                 android:hint="@string/edActivityLoginPassword" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -60,7 +62,7 @@
             android:id="@+id/btnActivityLoginGetToken"
             android:layout_margin="5dp"
 
-            android:onClick="getToken"/>
+            android:onClick="profileRegistrationClick"/>
 
         <Button
             android:layout_width="match_parent"
@@ -70,7 +72,7 @@
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
             android:id="@+id/btnActivityLoginGetPassword"
-            android:onClick="getPassword"/>
+            android:onClick="profileLoginClick"/>
 
         <LinearLayout
             android:orientation="horizontal"

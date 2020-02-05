@@ -16,6 +16,8 @@ import java.util.ArrayList;
 public class Preferences {
     protected static String TAG = "#########" + Preferences.class.getName();
 
+    private SharedPreferences sPref;
+
 
     private Integer dataTimer;
     private String checkPriorErrorText = "";
@@ -28,8 +30,11 @@ public class Preferences {
     private Boolean Friends = false, DispatcherMessages = false;
     private String FriendsCaption = "", FriendsText = "", DispatcherPhone = "", ClientsFriendsText = "", administrationCallPhone = "", faqLink = "";
 
+    private Boolean newOrderAlarmCheck;
+    private Integer newOrderAlarmDistance, newOrderAlarmCost;
+
     public Preferences(){
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
+        sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         curTheme = sPref.getInt("curTheme", 0);
         curTheme = 2;
         dataTimer = 5;
@@ -40,6 +45,10 @@ public class Preferences {
         }
 
         templateMessages = new ArrayList<>();
+
+        newOrderAlarmCheck      = sPref.getBoolean("newOrderAlarmCheck", true);
+        newOrderAlarmDistance   = sPref.getInt("newOrderAlarmDistance", -1);
+        newOrderAlarmCost       = sPref.getInt("newOrderAlarmCost", 100);
 
     }
 
@@ -197,9 +206,30 @@ public class Preferences {
         return "Подсветка";
     }
 
+    public Boolean getNewOrderAlarmCheck() {
+        return newOrderAlarmCheck;
+    }
 
+    public Integer getNewOrderAlarmDistance() {
+        return newOrderAlarmDistance;
+    }
 
+    public Integer getNewOrderAlarmCost() {
+        return newOrderAlarmCost;
+    }
 
+    public void setNewOrderAlarm(Boolean newOrderAlarmCheck, Integer newOrderAlarmDistance, Integer newOrderAlarmCost){
+        this.newOrderAlarmCheck = newOrderAlarmCheck;
+        this.newOrderAlarmDistance = newOrderAlarmDistance;
+        this.newOrderAlarmCost = newOrderAlarmCost;
+
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putBoolean("newOrderAlarmCheck", this.newOrderAlarmCheck);
+        editor.putInt("newOrderAlarmDistance", this.newOrderAlarmDistance);
+        editor.putInt("newOrderAlarmCost", this.newOrderAlarmCost);
+        editor.apply();
+
+    }
 
     public Integer getDataTimer() {
         return dataTimer;

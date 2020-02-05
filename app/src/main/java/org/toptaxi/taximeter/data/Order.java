@@ -259,8 +259,8 @@ public class Order {
     public String getDistanceString(){
         if (Distance == 0){return  "";}
         String result = "~";
-        if (Distance < 1000)result += new DecimalFormat("##0").format(Distance) + " м.";
-        else {result += new DecimalFormat("##0.00").format(Distance/1000) + " км.";}
+        if (Distance < 1000)result += new DecimalFormat("##0").format(Distance) + " м";
+        else {result += new DecimalFormat("##0.0").format(Distance/1000) + " км";}
         return result;
     }
 

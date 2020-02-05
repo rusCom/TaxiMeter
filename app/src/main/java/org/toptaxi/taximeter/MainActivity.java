@@ -10,7 +10,6 @@ import android.content.pm.ResolveInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -57,6 +56,7 @@ import org.toptaxi.taximeter.activities.BalanceActivity;
 import org.toptaxi.taximeter.activities.HisOrdersActivity;
 import org.toptaxi.taximeter.activities.MessagesActivity;
 import org.toptaxi.taximeter.activities.OrdersOnCompleteActivity;
+import org.toptaxi.taximeter.activities.SettingsActivity;
 import org.toptaxi.taximeter.activities.ShareDriverActivity;
 import org.toptaxi.taximeter.activities.SplashActivity;
 import org.toptaxi.taximeter.activities.StatisticsActivity;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
 
     static {
         AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_AUTO);
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
     }
 
     @Override
@@ -321,9 +321,11 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (requestCode == Constants.ACTIVITY_SPLASH){
             if (resultCode == RESULT_CANCELED)finish();
             else {
+                Log.d(TAG, "onActivityResult запускаем");
                 generateDrawer();
                 generateParkingButton();
             }
@@ -492,8 +494,9 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             viewMainData.setVisibility(View.VISIBLE);
             viewGPSError.setVisibility(View.GONE);
             //fabMainActions.setVisibility(View.VISIBLE);
-            if (!MainApplication.getInstance().getCurPlaceName().equals(""))tvGPSStatus.setText(MainApplication.getInstance().getCurPlaceName());
-            else tvGPSStatus.setText(MainApplication.getInstance().getLocationData());
+            tvGPSStatus.setText(MainApplication.getInstance().getCurLocationName());
+            //if (!MainApplication.getInstance().getCurPlaceName().equals(""))tvGPSStatus.setText(MainApplication.getInstance().getCurPlaceName());
+            //else tvGPSStatus.setText(MainApplication.getInstance().getLocationData());
         }
     }
 
@@ -704,6 +707,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         if (!MainApplication.getInstance().getMainPreferences().getAdministrationCallPhone().equals("")){
             drawer.addItem(new PrimaryDrawerItem().withName("Позвонить в администрацию").withIcon(FontAwesome.Icon.faw_phone).withSelectable(false).withIdentifier(Constants.MENU_CALL_ADMINISTRATION));
         }
+        drawer.addItem(new PrimaryDrawerItem().withName("Настройки").withIcon(FontAwesome.Icon.faw_cog).withSelectable(false).withIdentifier(Constants.MENU_SETTINGS));
         themeItem = new PrimaryDrawerItem().withName(MainApplication.getInstance().getMainPreferences().getThemeName()).withSelectable(false).withIcon(FontAwesome.Icon.faw_exchange).withIdentifier(Constants.MENU_THEME);
         drawer.addItem(themeItem);
         drawer.addItem(new DividerDrawerItem());
@@ -743,6 +747,10 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
             case Constants.MENU_SHARE_DRIVER:
                 Intent shareDriverIntent = new Intent(MainActivity.this, ShareDriverActivity.class);
                 startActivity(shareDriverIntent);
+                break;
+            case Constants.MENU_SETTINGS:
+                Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
             case Constants.MENU_CALL_ADMINISTRATION:callIntent(MainApplication.getInstance().getMainPreferences().getAdministrationCallPhone());break;
             case Constants.MENU_CALL_DISPATCHING:callIntent(MainApplication.getInstance().getMainPreferences().getDispatcherPhone());break;
