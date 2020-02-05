@@ -29,16 +29,22 @@ public class RestService {
     public RestService() {
         httpClient = new OkHttpClient();
         header = new JSONObject();
-        try {
-            header.put("token", MainApplication.getInstance().getMainAccount().getToken());
-            header.put("device_id", MainApplication.getInstance().getDeviceID());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        reloadHeader();
         restHost = new ArrayList<>();
         restHost.add(MainApplication.getInstance().getResources().getString(R.string.mainRestHost));
         restHost.add(MainApplication.getInstance().getResources().getString(R.string.reserveRestHost));
         restIndex = 0;
+    }
+
+    public void reloadHeader(){
+        header = new JSONObject();
+        try {
+            header.put("token", MainApplication.getInstance().getMainAccount().getToken());
+            header.put("device_id", MainApplication.getInstance().getDeviceID());
+            header.put("version", MainApplication.getInstance().getVersionCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getHeader(){
@@ -50,12 +56,6 @@ public class RestService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
-
-        try {
-            header.put("version", MainApplication.getInstance().getVersionCode());
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

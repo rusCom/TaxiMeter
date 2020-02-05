@@ -149,11 +149,12 @@ public class Account {
     }
 
     public void setToken(String token) {
+        Token = token;
         SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString("accountToken", token);
         editor.apply();
-        Token = token;
+
     }
 
     public String getNotReadMessageCount() {

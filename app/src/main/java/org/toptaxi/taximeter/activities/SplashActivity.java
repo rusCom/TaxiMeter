@@ -113,7 +113,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void init(){
-        Log.d(TAG, "init");
+        // Log.d(TAG, "init " + MainApplication.getInstance().getMainAccount().getToken());
+
         // Есть ли учетные данные по клиенту
         if (MainApplication.getInstance().getMainAccount().getToken().equals("")){
             Intent loginIntent = new Intent(SplashActivity.this, LoginActivity.class);
