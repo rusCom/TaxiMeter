@@ -20,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RestService {
-    protected static String TAG = "###" + RestService.class.getName();
+    protected static String TAG = "######" + RestService.class.getName();
     private OkHttpClient httpClient;
     private JSONObject header;
     private ArrayList<String> restHost;
@@ -42,12 +42,17 @@ public class RestService {
             header.put("token", MainApplication.getInstance().getMainAccount().getToken());
             header.put("device_id", MainApplication.getInstance().getDeviceID());
             header.put("version", MainApplication.getInstance().getVersionCode());
+            header.put("os_name", "android");
+            header.put("os_release", Build.VERSION.RELEASE);
+            header.put("os_sdk", Build.VERSION.SDK_INT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     private String getHeader(){
+        Log.d(TAG, "getHeader");
+
         Location location = MainApplication.getInstance().getMainLocation();
         if (location != null){
             try {
@@ -58,12 +63,14 @@ public class RestService {
             }
         }
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             return Base64.getEncoder().encodeToString(header.toString().getBytes());
         }
         else {
-            return android.util.Base64.encodeToString(header.toString().getBytes(), android.util.Base64.DEFAULT);
+            return android.util.Base64.encodeToString(header.toString().getBytes(), android.util.Base64.NO_WRAP);
         }
+
     }
 
     public void httpGetThread(final String path){
@@ -113,6 +120,7 @@ public class RestService {
     private Response restCall(String url){
         Response response = null;
         try {
+            Log.d(TAG, "restCall " + getHeader());
 
             Request request = new Request.Builder()
                     .url(url)
