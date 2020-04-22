@@ -87,7 +87,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_conformation_time"
+            android:drawableStart="@mipmap/ic_conformation_time"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_margin="@dimen/tv_route_point_margin"
             android:id="@+id/tvCurOrderDate"/>
@@ -100,21 +100,30 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_conformation_note"
+            android:drawableStart="@mipmap/ic_conformation_note"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_margin="@dimen/tv_route_point_margin"
             android:id="@+id/tvCurOrderNote"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_conformation_phone"
+            android:drawableStart="@mipmap/ic_conformation_phone"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_margin="@dimen/tv_route_point_margin"
             android:id="@+id/tvCurOrderPhone"/>
         <TextView
+            android:text="@string/covid19"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_conformation_dispatching"
+            android:drawableStart="@mipmap/ic_conformation_dispatching"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_margin="@dimen/tv_route_point_margin"
+            android:maxLines="1"
+            android:id="@+id/tvCurOrderCovid"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@mipmap/ic_conformation_dispatching"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_margin="@dimen/tv_route_point_margin"
             android:id="@+id/tvCurOrderDispatchingName"/>

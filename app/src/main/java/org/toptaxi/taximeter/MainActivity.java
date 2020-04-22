@@ -80,6 +80,7 @@ import org.toptaxi.taximeter.tools.FontFitTextView;
 import org.toptaxi.taximeter.tools.LockOrientation;
 import org.toptaxi.taximeter.tools.OnMainDataChangeListener;
 
+import java.io.Console;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,6 +226,8 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 callIntent(((TextView)findViewById(R.id.tvCurOrderPhone)).getText().toString());
             }
         });
+
+
 
         mpOrderStateChange = MediaPlayer.create(this, R.raw.order_state_change);
         mpOrderStateChange.setLooping(false);
@@ -979,6 +982,31 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 (findViewById(R.id.llViewOrderPriorInfo)).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.tvViewOrderPriorInfo)).setText(viewOrder.getPriorInfo());
             }
+
+            Log.d(TAG, "generateViewOrder");
+            /*
+            if (MainApplication.getInstance().getMainPreferences().getCovidLink().equals("")){
+                (findViewById(R.id.tvCurOrderCovid)).setVisibility(View.GONE);
+            }
+            else {
+                (findViewById(R.id.tvCurOrderCovid)).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.tvCurOrderCovid)).setText("COVID19 Пропуск Электронный");
+                (findViewById(R.id.tvCurOrderCovid)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent webViewIntent = new Intent(MainApplication.getInstance().getMainActivity(), WebViewActivity.class);
+                        Bundle webViewIntentParams = new Bundle();
+                        webViewIntentParams.putString("link", MainApplication.getInstance().getMainPreferences().getCovidLink() + MainApplication.getInstance().getMainAccount().getToken());
+                        webViewIntent.putExtras(webViewIntentParams);
+                        MainApplication.getInstance().getMainActivity().startActivity(webViewIntent);
+
+                    }
+                });
+            }
+
+             */
+
+
 
             (findViewById(R.id.llViewOrderNote)).setVisibility(View.GONE);
             if (viewOrder.getNote() != null)

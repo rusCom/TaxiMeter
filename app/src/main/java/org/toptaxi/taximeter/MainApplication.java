@@ -347,12 +347,6 @@ public class MainApplication extends Application implements LocationListener {
             if (getMainPreferences().getParkingButtons())mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_PARKINGS, "Расклад по стоянкам"));
         }
 
-        // Если водитель на заказе и есть шаблон справки
-        if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER) && (!getMainPreferences().getCovidLink().equals(""))){
-            mainActionItems.add(new MainActionItem(Constants.MENU_COVID19, "Справка Covid19"));
-        }
-        // mainActionItems.add(new MainActionItem(Constants.MENU_COVID19, "Справка Covid19"));
-
         // Если водитель на заказе и есть шаблоны сообщений, то показываем шаблоны
         if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER) && (getMainPreferences().getTemplateMessages().size() > 0) && (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())){
             for (int itemID = 0; itemID < getMainPreferences().getTemplateMessages().size(); itemID++){
@@ -360,12 +354,6 @@ public class MainApplication extends Application implements LocationListener {
             }
 
         }
-
-        //Log.d(TAG, "getMainActions status = " + getMainAccount().getStatus() + "; action = " + getCurOrder().getMainAction() + "; menu = " + getMenuItems().getOrdersOnComplete());
-        // && (getCurOrder().getMainAction().equals("set_order_done"))
-
-
-
 
 
         if (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())

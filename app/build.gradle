@@ -8,8 +8,8 @@ android {
         applicationId "org.toptaxi.taximeter"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 33
-        versionName "33"
+        versionCode 34
+        versionName "34"
     }
     buildTypes {
         release {

@@ -1,6 +1,8 @@
 package org.toptaxi.taximeter.data;
 
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.toptaxi.taximeter.MainApplication;
 import org.toptaxi.taximeter.R;
+import org.toptaxi.taximeter.activities.WebViewActivity;
 import org.toptaxi.taximeter.tools.DateTimeTools;
 
 import java.sql.Timestamp;
@@ -137,6 +140,24 @@ public class Order {
     }
 
     public void fillCurOrderViewData(AppCompatActivity view){
+        if (MainApplication.getInstance().getMainPreferences().getCovidLink().equals("")){
+            view.findViewById(R.id.tvCurOrderCovid).setVisibility(View.GONE);
+        }
+        else {
+            view.findViewById(R.id.tvCurOrderCovid).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.tvCurOrderCovid).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent webViewIntent = new Intent(MainApplication.getInstance().getMainActivity(), WebViewActivity.class);
+                    Bundle webViewIntentParams = new Bundle();
+                    webViewIntentParams.putString("link", MainApplication.getInstance().getMainPreferences().getCovidLink() + MainApplication.getInstance().getMainAccount().getToken());
+                    webViewIntent.putExtras(webViewIntentParams);
+                    MainApplication.getInstance().getMainActivity().startActivity(webViewIntent);
+                }
+            });
+        }
+
+
         view.findViewById(R.id.llCurOrderTitle).setBackgroundResource(getCaptionColor());
         if (Note.trim().equals("")){view.findViewById(R.id.tvCurOrderNote).setVisibility(View.GONE);}
         else {
@@ -161,6 +182,8 @@ public class Order {
         ((TextView)view.findViewById(R.id.tvCurOrderPayType)).setText(getPayTypeName());
         ((TextView)view.findViewById(R.id.tvCurOrderCalcType)).setText(getCalcType());
         ((TextView)view.findViewById(R.id.tvCurOrderPayPercent)).setText(DispPay);
+
+
 
     }
 
