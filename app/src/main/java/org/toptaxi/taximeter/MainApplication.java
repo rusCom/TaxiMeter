@@ -173,7 +173,7 @@ public class MainApplication extends Application implements LocationListener {
 
     public String getCurLocationName() {
         if (curLocationName.equals("")){
-            return  getMainLocation().toString();
+            return  getMainLocation().getLatitude() + ";" + getMainLocation().getLongitude();
         }
         return curLocationName;
     }
@@ -346,6 +346,12 @@ public class MainApplication extends Application implements LocationListener {
             mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_PRIOR_ORDER, "Предварительные заказы"));
             if (getMainPreferences().getParkingButtons())mainActionItems.add(new MainActionItem(Constants.MAIN_ACTION_PARKINGS, "Расклад по стоянкам"));
         }
+
+        // Если водитель на заказе и есть шаблон справки
+        if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER) && (!getMainPreferences().getCovidLink().equals(""))){
+            mainActionItems.add(new MainActionItem(Constants.MENU_COVID19, "Справка Covid19"));
+        }
+        // mainActionItems.add(new MainActionItem(Constants.MENU_COVID19, "Справка Covid19"));
 
         // Если водитель на заказе и есть шаблоны сообщений, то показываем шаблоны
         if ((getMainAccount().getStatus() == Constants.DRIVER_ON_ORDER) && (getMainPreferences().getTemplateMessages().size() > 0) && (MainApplication.getInstance().getMainPreferences().getDispatcherMessages())){

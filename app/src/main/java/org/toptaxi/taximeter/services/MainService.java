@@ -200,11 +200,17 @@ public class MainService extends Service implements GoogleApiClient.ConnectionCa
                                     lastLatitude = MainUtils.round(MainApplication.getInstance().getMainLocation().getLatitude(), 6);
                                     lastLongitude = MainUtils.round(MainApplication.getInstance().getMainLocation().getLongitude(), 6);
                                     // MainApplication.getInstance().getPlacesAPI().getCurPlace();
-                                    String url = "http://api.toptaxi.org/geo/geocode?lt=" + lastLatitude + "&ln=" + lastLongitude;
+                                    String url = "http://geo.toptaxi.org/geocode/driver?lt=" + lastLatitude + "&ln=" + lastLongitude;
                                     // Log.d(TAG, "CurLocationName url = " + url);
                                     JSONObject data = MainApplication.getInstance().getRestService().httpGetAny(url);
-                                    JSONObject result = data.getJSONObject("result");
-                                    MainApplication.getInstance().setCurLocationName(result.getString("name") + " (" + result.getString("dsc") + ")");
+                                    // Log.d(TAG, "CurLocationName data = " + data.toString());
+                                    if (data.has("status")){
+                                        if (data.getString("status").equals("OK")){
+                                            JSONObject result = data.getJSONObject("result");
+                                            MainApplication.getInstance().setCurLocationName(result.getString("name") + " (" + result.getString("dsc") + ")");
+                                        }
+                                    }
+
                                     // Log.d(TAG, "CurLocationName = " + result.toString());
                                 }
                             }

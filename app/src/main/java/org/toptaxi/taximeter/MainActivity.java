@@ -60,6 +60,7 @@ import org.toptaxi.taximeter.activities.SettingsActivity;
 import org.toptaxi.taximeter.activities.ShareDriverActivity;
 import org.toptaxi.taximeter.activities.SplashActivity;
 import org.toptaxi.taximeter.activities.StatisticsActivity;
+import org.toptaxi.taximeter.activities.WebViewActivity;
 import org.toptaxi.taximeter.adapters.MainActionAdapter;
 import org.toptaxi.taximeter.adapters.MainActionUnlimAdapter;
 import org.toptaxi.taximeter.adapters.OnMainActionClickListener;
@@ -677,6 +678,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
         drawer.addItem(new DividerDrawerItem());
         //drawer.addItem(new PrimaryDrawerItem().withName("Таксометр").withIcon(FontAwesome.Icon.faw_taxi).withSelectable(false).withIdentifier(Constants.MENU_TAXIMETER));
 
+
         if (MainApplication.getInstance().getMenuItems().getMessages()){
             messagesItem = new PrimaryDrawerItem().withName("Сообщения диспетчеру").withIcon(FontAwesome.Icon.faw_commenting_o).withSelectable(false).withBadge(String.valueOf(MainApplication.getInstance().getMainAccount().getNotReadMessageCount())).withIdentifier(Constants.MENU_MESSAGES);
             drawer.addItem(messagesItem);
@@ -767,6 +769,7 @@ public class MainActivity extends AppCompatActivity implements OnMainDataChangeL
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, MainApplication.getInstance().getMainPreferences().getClientsFriendsText());
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
                 break;
+
 
         }
         return false;

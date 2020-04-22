@@ -20,7 +20,7 @@ public class Preferences {
 
 
     private Integer dataTimer;
-    private String checkPriorErrorText = "";
+    private String checkPriorErrorText = "", covidLink = "";
     private String agreementLink = "";
     private Integer curTheme, curVersion, agreementVersion = 0, placesTimeOut = 60;
     private Boolean checkCurVersion = false;
@@ -53,6 +53,7 @@ public class Preferences {
     }
 
     public void setFromJSON(JSONObject data) throws JSONException {
+
         if (data.has("cur_version"))curVersion = data.getInt("cur_version");
         if (data.has("parkings_buttons"))ParkingButtons = data.getBoolean("parkings_buttons");
 
@@ -84,6 +85,7 @@ public class Preferences {
         if (data.has("agreement_version")){this.agreementVersion = data.getInt("agreement_version");}
         if (data.has("places_timeout")){this.placesTimeOut = data.getInt("places_timeout");}
         if (data.has("faq_link")){this.faqLink = data.getString("faq_link");}
+        if (data.has("covid_link")){this.covidLink = data.getString("covid_link");}
         if (data.has("menu")){MainApplication.getInstance().getMenuItems().setFromJSON(data.getJSONObject("menu"));}
 
         if (data.has("friends")){
@@ -146,7 +148,9 @@ public class Preferences {
         return agreementVersion;
     }
 
-
+    public String getCovidLink() {
+        return covidLink;
+    }
 
     public Boolean getParkingButtons() {
         return ParkingButtons;

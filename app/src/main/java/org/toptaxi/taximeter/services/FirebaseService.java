@@ -44,11 +44,12 @@ public class FirebaseService {
         }
     } // public FirebaseService()
 
+
     void setPushToken(String token){
         MainApplication.getInstance().getRestService().httpGetThread("/profile/push?push_token=" + token);
         FirebaseMessaging.getInstance().subscribeToTopic("allDevices");
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-        sharedPreferencesEditor.putString( "pushToken", "token" );
+        sharedPreferencesEditor.putString( "pushToken", token);
         sharedPreferencesEditor.apply();
     }
 

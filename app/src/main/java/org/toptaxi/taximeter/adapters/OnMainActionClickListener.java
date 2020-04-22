@@ -3,6 +3,7 @@ package org.toptaxi.taximeter.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import org.toptaxi.taximeter.R;
 import org.toptaxi.taximeter.activities.MessagesActivity;
 import org.toptaxi.taximeter.activities.OrdersOnCompleteActivity;
 import org.toptaxi.taximeter.activities.PriorOrderActivity;
+import org.toptaxi.taximeter.activities.WebViewActivity;
 import org.toptaxi.taximeter.data.MainActionItem;
 import org.toptaxi.taximeter.tools.Constants;
 
@@ -67,6 +69,14 @@ public class OnMainActionClickListener implements AdapterView.OnItemClickListene
                     break;
                 case Constants.MAIN_ACTION_ORDERS_COMPLETE:
                     MainApplication.getInstance().getMainActivity().startActivity(new Intent(MainApplication.getInstance().getMainActivity(), OrdersOnCompleteActivity.class));
+                    break;
+                case Constants.MENU_COVID19:
+                    Intent webViewIntent = new Intent(MainApplication.getInstance().getMainActivity(), WebViewActivity.class);
+                    Bundle webViewIntentParams = new Bundle();
+                    webViewIntentParams.putString("link", MainApplication.getInstance().getMainPreferences().getCovidLink() + MainApplication.getInstance().getMainAccount().getToken());
+                    webViewIntent.putExtras(webViewIntentParams);
+                    MainApplication.getInstance().getMainActivity().startActivity(webViewIntent);
+
                     break;
 
             }
